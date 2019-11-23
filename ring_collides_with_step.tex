@@ -2,6 +2,8 @@
 \usepackage{tikz}
 \usetikzlibrary{scopes}
 \usepackage{verbatim}
+\usetikzlibrary{calc,angles,patterns,quotes}
+
 
 \begin{comment}
 
@@ -18,6 +20,27 @@ Note that this example uses the shorthand scope notation in some places.
 
 \end{comment}
 
+
+\tikzset{
+    right angle quadrant/.code={
+        \pgfmathsetmacro\quadranta{{1,1,-1,-1}[#1-1]}     % Arrays for selecting quadrant
+        \pgfmathsetmacro\quadrantb{{1,-1,-1,1}[#1-1]}},
+    right angle quadrant=1, % Make sure it is set, even if not called explicitly
+    right angle length/.code={\def\rightanglelength{#1}},   % Length of symbol
+    right angle length=1ex, % Make sure it is set...
+    right angle symbol/.style n args={3}{
+        insert path={
+            let \p0 = ($(#1)!(#3)!(#2)$) in     % Intersection
+                let \p1 = ($(\p0)!\quadranta*\rightanglelength!(#3)$), % Point on base line
+                \p2 = ($(\p0)!\quadrantb*\rightanglelength!(#2)$) in % Point on perpendicular line
+                let \p3 = ($(\p1)+(\p2)-(\p0)$) in  % Corner point of symbol
+            (\p1) -- (\p3) -- (\p2)
+        }
+    }
+}
+
+
+
 \begin{document}
 
 \def\iangle{35} % Angle of the inclined plane
@@ -33,68 +56,65 @@ Note that this example uses the shorthand scope notation in some places.
     string/.style={draw=red, thick},
     pulley/.style={thick},
 ]
-\matrix[column sep=1cm, row sep=2cm] {
-    %% Sketch
-    \draw[plane] (0,-1) coordinate (base)
-                     -- coordinate[pos=0.5] (mid) ++(\iangle:3) coordinate (top)
-                     |- (base) -- cycle;
-    \path (mid) node[M,rotate=\iangle,yshift=0.25cm] (M) {};
-    \draw[pulley] (top) -- ++(\iangle:0.25) circle (0.25cm)
-                   ++ (90-\iangle:0.5) coordinate (pulley);
-    \draw[string] (M.east) -- ++(\iangle:1.5cm) arc (90+\iangle:0:0.25)
-                  -- ++(0,-1) node[m] {};
-
-    \draw[->] (base)++(\arcr,0) arc (0:\iangle:\arcr);
-    \path (base)++(\iangle*0.5:\arcr+5pt) node {$\alpha$};
-    %%
-&
-    %% Free body diagram of M
-    \begin{scope}[rotate=\iangle]
-        \node[M,transform shape] (M) {};
-        % Draw axes and help lines
-        {[axis,->]
-            \draw (0,-1) -- (0,2) node[right] {$+y$};
-            \draw (M) -- ++(2,0) node[right] {$+x$};
-            % Indicate angle. The code is a bit awkward.
-            \draw[solid,shorten >=0.5pt] (\down-\iangle:\arcr)
-                arc(\down-\iangle:\down:\arcr);
-            \node at (\down-0.5*\iangle:1.3*\arcr) {$\alpha$};
-        }
-        % Forces
-        {[force,->]
-            % Assuming that Mg = 1. The normal force will therefore be cos(alpha)
-            \draw (M.center) -- ++(0,{cos(\iangle)}) node[above right] {$N$};
-            \draw (M.west) -- ++(-1,0) node[left] {$f_R$};
-            \draw (M.east) -- ++(1,0) node[above] {$T$};
-        }
-    \end{scope}
-    % Draw gravity force. The code is put outside the rotated
-    % scope for simplicity. No need to do any angle calculations.
-    \draw[force,->] (M.center) -- ++(0,-1) node[below] {$Mg$};
-    %%
-&
-    %%%
-    % Free body diagram of m
-    \node[m] (m) {};
-    \draw[axis,->] (m) -- ++(0,-2) node[left] {$+$};
-    {[force,->]
-        \draw (m.north) -- ++(0,1) node[above] {$T'$};
-        \draw (m.south) -- ++(0,-1) node[right] {$mg$};
-    }
-\\
+\matrix[column sep=1cm, row sep=0.5cm] {
     % initial state
     \node[circle, draw, thick, minimum size=2cm] (ring) {};
     \draw[fill=black] (ring) circle [radius=0.03]; % draw a point in the centre of the ring
-    \draw (ring.south) -- ++(3, 0) -- ++(0, 0.5) -- node(stepmiddle){} ++(3, 0) node (steprightedge){};
+    \node[above] at (ring.center) {$C$};
+
+    \draw (ring.south) -- ++(1.5, 0) coordinate (stepbase)
+                       -- ++(0, 0.5cm) coordinate (stepcorner)
+                       -- node(stepmiddle){} ++(3, 0) node (steprightedge){};
+
     \draw (ring.south) -- ++(-1cm, 0);
+    \node[below right=-0.05cm] at (stepcorner) {$O$};
+
     % initial velocity vector
     \draw[force, ->] (ring.center) -- ++(1.5cm, 0) node[above]{$\vec{v}$};
-    \draw[force, draw=black, ->] (ring.center) -- node[right] {$R$} ++(0, -1cm);
+    \draw[force, draw=black, ->] (ring.center) -- node[left] {$R$} ++(0, -1cm);
 
-    \draw[force, draw=black, <->] (stepmiddle.center) -- node[right] {$h$} ++(0, -0.5);
+    \draw[force, draw=black, <->] (stepmiddle.center) -- node[right] {$h$} ++(0, -0.5cm) coordinate (stepmiddlebase);
+    \draw[axis,-](stepbase) -- (stepmiddlebase) -- ++(0.5, 0);
+    \node[below=2cm] at (ring.center) {Fig. 1: Before the collision};
 
+\\
     % just after collision
+    \node[circle, draw, thick, minimum size=2cm] (ring) {};
+    \draw[fill=black] (ring) circle [radius=0.03]; % draw a point in the centre of the ring
+    \node[above] (ring.center) {$C$};
 
+    % draw the floor and the step
+    \draw (ring.south) -- ++(0.87cm, 0) coordinate (stepbase)
+                       -- ++(0, 0.5cm) coordinate (stepcorner)
+                       -- node(stepmiddle){} ++(3, 0) node (steprightedge){};
+
+    \draw (ring.south) -- ++(-1cm, 0);
+    \node[below right=-0.05cm] at (stepcorner) {$O$};
+
+    \draw[force, draw=black, ->] (ring.center) -- node[left](rlabel) {$R$} ++(0, -1cm) node (rend) {};
+
+    \draw[force, draw=black, <->] (stepmiddle.center) -- node[right] {$h$} ++(0, -0.5cm) coordinate (stepmiddlebase);
+    \draw[axis,-](stepbase) -- (stepmiddlebase) -- ++(0.5, 0);
+
+    \draw[axis,-](stepcorner) -- coordinate(v2end) ([xshift=-2.25cm,yshift=1.35cm]ring.center);
+    \draw[axis,-](ring.center) -- coordinate(v1end) ([xshift=1.62cm,yshift=2.7cm]ring.center);
+
+    \draw[axis,-](ring.center) -- ++(0, 2cm);
+
+    \draw[force, ->] (ring.center) -- (v2end) node[below]{$\vec{v}_{2}$};
+    \draw[force, ->] (ring.center) -- (v1end) node[below right]{$\vec{v}_{1}$};
+
+    \draw[draw=gray, right angle symbol={v2end}{ring.center}{v1end}];
+    \draw[draw=gray, right angle symbol={ring.center}{rend}{stepbase}];
+    \pic [draw, ->, "$\alpha$", angle eccentricity=1.3] {angle = rend--ring--stepcorner};
+
+
+    % draw z-x axes
+    \draw[fill=black] (2, 0.5) circle [radius=0.03] coordinate (zxorigin); % draw a point in the centre of the ring
+    \draw[axis,>=latex,->] (zxorigin) -- ++(1cm, 0) node[above right]{$x$};
+    \draw[axis,>=latex,->] (zxorigin) -- ++(0, 1cm) node[above right]{$z$};
+
+    \node[below=2cm] at (ring.center) {Fig. 2: After the collision};
 
 \\
 };
