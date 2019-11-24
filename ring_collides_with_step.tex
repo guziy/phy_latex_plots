@@ -110,9 +110,10 @@ Note that this example uses the shorthand scope notation in some places.
 
 
     % draw z-x axes
-    \draw[fill=black] (2, 0.5) circle [radius=0.03] coordinate (zxorigin); % draw a point in the centre of the ring
+    \node  at (2, 0.5) (zxorigin){};
     \draw[axis,>=latex,->] (zxorigin) -- ++(1cm, 0) node[above right]{$x$};
     \draw[axis,>=latex,->] (zxorigin) -- ++(0, 1cm) node[above right]{$z$};
+    \draw[fill=black] (zxorigin)  circle [radius=0.03]; % draw a point in the centre of the ring
 
     \node[below=2cm] at (ring.center) {Fig. 2: After the collision};
 
