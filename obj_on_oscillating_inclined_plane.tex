@@ -65,14 +65,22 @@ Note that this example uses the shorthand scope notation in some places.
 
     \begin{scope}[rotate=\ang]
 
-
-
       \draw (0, 0) rectangle ++(4cm, 0.1cm) node (plane) {};
+
+      % object and forces acting on it
       \draw (2.5cm, 0.1cm) rectangle ++(0.5cm, 0.25cm);
+      \draw[fill=black] (2.75cm, 0.225cm) circle [radius=0.03]  node (obj_center) {}; %
+
+      \draw[force,>=latex,->] (obj_center.center) -- ++(0, 1cm) node[right] {$\vec{N}$};
+      \draw[force,>=latex,->,rotate=-\ang] (obj_center.center) -- ++(0, -1cm) node[right] {$m\vec{g}$};
+      \draw[force,>=latex,->] (obj_center.center) -- ++(1cm, 0) node[above] {$\vec{F}_{i}$};
+      \draw[force,>=latex,->] (obj_center.center) -- ++(-1cm, 0) node[above=0.1cm] {$\vec{F}_{f}$};
+
       \draw[axis,>=latex,->] (3.5cm, 1.5cm) -- ++(2cm, 0cm) node[above right] {$x$};
 
       \draw[force,>=latex,->] (4.5cm, 0cm) -- ++(2cm, 0) node[below, right] {$+v_0$};
       \draw[force,>=latex,->] (-0.5cm, 0cm) -- ++(-2cm, 0) node[below, left] {$-v_0$};
+
     \end{scope}
 
     % draw the angle of the inclined plane
@@ -80,6 +88,10 @@ Note that this example uses the shorthand scope notation in some places.
     \pic [draw, ->, "$\alpha$", angle eccentricity=1.3]{
         angle = angle_beg--rotation_center--angle_end
     };
+
+    \node[text width=8cm] at (0, 5cm) {Fig 1: Oscillating inclined plane with the mass on it,
+                                  forces are shown at the moment when the object is sliding up the plane
+                                  with the inertia force directed upwards.};
 
 \end{tikzpicture}
 
