@@ -1,0 +1,38 @@
+documentclass[tikz,border=10pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{scopes}
+\usepackage{verbatim}
+\usetikzlibrary{calc,angles,patterns,quotes}
+
+
+\begin{document}
+
+\def\iangle{35} % Angle of the inclined plane
+\def\down{-90}
+\def\arcr{0.5cm} % Radius of the arc used to indicate angles
+\def\ang{30}
+
+\begin{tikzpicture}[
+    force/.style={>=latex,draw=blue,fill=blue},
+    axis/.style={densely dashed,gray},
+    M/.style={rectangle,draw,fill=lightgray,minimum size=0.5cm,thin},
+    m/.style={rectangle,draw=black,fill=lightgray,minimum size=0.3cm,thin},
+    plane/.style={draw=black,fill=blue!10},
+    string/.style={draw=red, thick},
+    pulley/.style={thick}
+]
+
+
+   
+    % object and forces acting on it
+    \draw (2.5cm, 0.1cm) rectangle ++(0.5cm, 0.25cm) node (right_edge);
+   
+    \draw[force,>=latex,->] (right_edge) -- ++(0, 1cm) node[right] {$F=F_0 \sin (\omega t)$};
+   
+ 
+
+\end{tikzpicture}
+
+
+
+\end{document}
