@@ -1,4 +1,4 @@
-documentclass[tikz,border=10pt]{standalone}
+\documentclass[tikz,border=10pt]{standalone}
 \usepackage{tikz}
 \usetikzlibrary{scopes}
 \usepackage{verbatim}
@@ -25,9 +25,11 @@ documentclass[tikz,border=10pt]{standalone}
 
    
     % object and forces acting on it
-    \draw (2.5cm, 0.1cm) rectangle ++(0.5cm, 0.25cm) node (right_edge);
-   
-    \draw[force,>=latex,->] (right_edge) -- ++(0, 1cm) node[right] {$F=F_0 \sin (\omega t)$};
+    \draw (0cm, 0cm) rectangle ++(6cm, 0.4cm) -- ++(0, -0.2cm) node (right_edge){};
+    \node[anchor=south] at (3cm, 0.4cm) {$L$};
+    \node[anchor=east] at (0cm, 0.2cm) {$S$};
+
+    \draw[force,>=latex,<-] (right_edge) -- ++(1, 0) node[right] {$F=F_0 \sin (\omega t)$};
    
  
 
