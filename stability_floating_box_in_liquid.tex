@@ -50,8 +50,8 @@ Note that this example uses the shorthand scope notation in some places.
 \def\down{-90}
 \def\arcr{0.5cm} % Radius of the arc used to indicate angles
 \def\ang{-30}
-\def\a{1.5cm}
-\def\b{3cm}
+\def\a{2.5cm}
+\def\b{3.5cm}
 
 \begin{tikzpicture}[
     force/.style={>=latex,draw=blue!60,fill=blue},
@@ -63,12 +63,6 @@ Note that this example uses the shorthand scope notation in some places.
     pulley/.style={thick},
     point/.style={circle, fill=black, inner sep=1pt}
 ]
-
-    
-    
-    
-
-    
 
     \begin{scope}[rotate=\ang]
 
@@ -87,8 +81,13 @@ Note that this example uses the shorthand scope notation in some places.
 
       \path ([yshift=-\b / 6]O) node (Cphi) {};
   
-      \path ([yshift=0.2cm, xshift=0.3cm]Aprime) node (Aphi) {};
-  
+      \path ([yshift=0.3cm, xshift=0.3cm]Aprime) node (Aphi) {};
+
+      \draw [name path global=leftEdge] (0, 0) -- (0, \b);
+      \draw [name path global=rightEdge] (\a, 0) -- (\a, \b);
+
+      \path[name intersections={of=leftEdge and horiz_init_level, by=L1}];
+      
 
     \end{scope}
 
@@ -97,18 +96,30 @@ Note that this example uses the shorthand scope notation in some places.
 
     \draw[axis,>=latex , ->] (O) -- ++(0cm, -0.9 * \b) node[anchor=west]{ $y$ };
 
-
-
     \draw[axis] (O) -- ++(0cm, 0.5 * \b);
 
-    \draw[axis,>=latex , ->] (O) -- ++(2 * \a, 0cm) node[anchor=south]{ $x$ };
+    \draw[axis,>=latex , ->] (O) -- ++(1.6 * \a, 0cm) node[anchor=south]{ $x$ };
 
     % liquid surface
-    \draw[black, thick] (O) -- ++(1.1*\a, 0cm);
-    \draw[black, thick] (O) -- ++(-1.1*\a, 0cm);
+    \draw[black, thick] (O) -- ++(1.1*\a, 0cm) node (rightSurf){};
+    \draw[black, thick] (O) -- ++(-1.1*\a, 0cm) node (leftSurf){};
 
-    \draw[force, >=latex, ->] (Cphi.center) -- ++(0cm, -3cm) node[anchor=east]{$\vec{F}_g$};
-    \draw[force, >=latex, ->] (Aphi.center) -- ++(0cm, 3cm) node[anchor=east]{$\vec{F}_A$};
+    \path[name path=liquidSurface] (leftSurf) -- (rightSurf);
+
+    \path[name intersections={of=leftEdge and liquidSurface, by=L2}];
+
+    \draw[blue, ultra thick, draw opacity=0.3] (O) -- (L2)  node[midway,point] (midOL2){}; 
+    \draw[blue, ultra thick, draw opacity=0.3] (L2) -- (L1) node[midway, left=-0.1cm]{$m_L$}; 
+    \draw[blue, ultra thick, draw opacity=0.3] (L1) -- (O);
+    \draw[axis] (L1) -- (midOL2) node[point, pos=2/3] (CL){};
+    \draw[axis] (CL) -- ($(L2)!(CL)!(midOL2)$) node[point] (XCL) {};
+    
+
+
+
+
+    \draw[force, >=latex, ->] (Cphi.center) -- ++(0cm, -3cm) node (fg)[anchor=east]{$\vec{F}_g$};
+    \draw[force, >=latex, ->] (Aphi.center) -- ++(0cm, 3cm) node (fa) [anchor=east]{$\vec{F}_A$};
 
 
     \node [point, 
