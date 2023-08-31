@@ -77,24 +77,36 @@ Note that this example uses the shorthand scope notation in some places.
       
       \path ([yshift=1.5cm]O) node (angle_end) {};
       \path ([yshift=-\b / 3]O) node[point, 
-                                     label={[xshift=-0.1cm, yshift=-0.05cm, font=\tiny] $A'$}] (Aprime) {};
+                                     label={[xshift=-0.1cm, 
+                                             yshift=-0.05cm, 
+                                             font=\tiny] $A'_{\varphi}$}] (Aprime) {};
 
       \path ([yshift=-\b / 6]O) node (Cphi) {};
   
       \path ([yshift=0.3cm, xshift=0.3cm]Aprime) node (Aphi) {};
 
+      % box edges
       \draw [name path global=leftEdge] (0, 0) -- (0, \b);
       \draw [name path global=rightEdge] (\a, 0) -- (\a, \b);
+      \draw [name path global=bottomEdge] (0, 0) -- (\a, 0);
+      \draw [name path global=topEdge] (0, \b) -- (\a, \b);
 
       \path[name intersections={of=leftEdge and horiz_init_level, by=L1}];
-      
+      \path[name intersections={of=rightEdge and horiz_init_level, by=R1}];
+      \node[inner sep=0pt, anchor=south east] at (L1){L};
+      \node[inner sep=0pt, anchor=north west] at (R1){R};
 
+      \path[name intersections={of=leftEdge and bottomEdge, by=B1}];
+      \path[name intersections={of=rightEdge and bottomEdge, by=B2}];
+      \path[name intersections={of=rightEdge and topEdge, by=B3}];
+      \path[name intersections={of=leftEdge and topEdge, by=B4}];
+      
     \end{scope}
 
 
     \path ([yshift=1.5cm]O) node (angle_beg) {};
 
-    \draw[axis,>=latex , ->] (O) -- ++(0cm, -0.9 * \b) node[anchor=west]{ $y$ };
+    \draw[axis,>=latex , ->] (O) -- ++(0cm, -0.9 * \b) node[anchor=west](bottom_yaxis){ $y$ };
 
     \draw[axis] (O) -- ++(0cm, 0.5 * \b);
 
@@ -106,18 +118,43 @@ Note that this example uses the shorthand scope notation in some places.
 
     \path[name path=liquidSurface] (leftSurf) -- (rightSurf);
 
-    \path[name intersections={of=leftEdge and liquidSurface, by=L2}];
 
-    \draw[blue, ultra thick, draw opacity=0.3] (O) -- (L2)  node[midway,point] (midOL2){}; 
+    \path[name intersections={of=leftEdge and liquidSurface, by=L2}];
+    \path[name intersections={of=rightEdge and liquidSurface, by=R2}];
+
+
+    % blue triangle
+    \draw[blue, ultra thick, draw opacity=0.3] (O) -- (L2)  node[midway,point, blue] (midOL2){}; 
     \draw[blue, ultra thick, draw opacity=0.3] (L2) -- (L1) node[midway, left=-0.1cm]{$m_L$}; 
     \draw[blue, ultra thick, draw opacity=0.3] (L1) -- (O);
-    \draw[axis] (L1) -- (midOL2) node[point, pos=2/3] (CL){};
-    \draw[axis] (CL) -- ($(L2)!(CL)!(midOL2)$) node[point] (XCL) {};
-    
+    \draw[axis] (L1) -- (midOL2) node[point, blue, pos=2/3] (CL){};
+    \draw[gray] (CL) -- ($(L2)!(CL)!(midOL2)$) node[point, blue] (XCL) {};
+    \draw[fill=blue, opacity=0.2] (O) -- (L1) -- (L2);
+  
+    \path (CL) -- (XCL) node[pos=0.75] (above_xcl){};
+    \path (L2) -- (XCL) node[pos=0.95] (left_xcl){};
+
+    \node[label={[xshift=0cm, yshift=-0.5cm, font=\tiny, text=blue] $x_L$}] at (XCL){};
+    \draw[gray] (left_xcl.center) |- (above_xcl.center);
+
+
+    % red triangle
+    \draw[red, ultra thick, draw opacity=0.3] (O) -- (R2)  node[midway,point, red] (midOR2){}; 
+    \draw[red, ultra thick, draw opacity=0.3] (R2) -- (R1) node[midway, right=0cm]{$m_R$}; 
+    \draw[red, ultra thick, draw opacity=0.3] (R1) -- (O);
+    \draw[axis] (R1) -- (midOR2) node[point, red, pos=2/3] (CR){};
+    \draw[gray] (CR) -- ($(R2)!(CR)!(midOR2)$) node[point, red] (XCR) {};
+    \draw[fill=red, opacity=0.2] (O) -- (R1) -- (R2);
+  
+    \path (CR) -- (XCR) node[pos=0.75] (above_xcr){};
+    \path (R2) -- (XCR) node[pos=0.95] (left_xcr){};
+
+    \node[label={[xshift=0.1cm, yshift=-0.2cm, font=\tiny, text=red] $x_R$}] at (XCR){};
+    \draw[gray] (left_xcr.center) |- (above_xcr.center);
 
 
 
-
+    % forces
     \draw[force, >=latex, ->] (Cphi.center) -- ++(0cm, -3cm) node (fg)[anchor=east]{$\vec{F}_g$};
     \draw[force, >=latex, ->] (Aphi.center) -- ++(0cm, 3cm) node (fa) [anchor=east]{$\vec{F}_A$};
 
@@ -140,6 +177,11 @@ Note that this example uses the shorthand scope notation in some places.
         angle = angle_end--O--angle_beg
     };
 
+    % box vertices
+    \node [anchor=north east, inner sep=0pt] at (B1) {$B_1$};
+    \node [anchor=north west, inner sep=0pt] at (B2) {$B_2$};
+    \node [anchor=south west, inner sep=0pt] at (B3) {$B_3$};
+    \node [anchor=south east, inner sep=0pt] at (B4) {$B_4$};
 
 \end{tikzpicture}
 
