@@ -90,9 +90,9 @@
 
     % forces acting on the bottom timber
     \draw[force, ->] (b2.center) -- ++(0, -0.6 * \radius) node[right] {$m\vec{g}$};
-    \draw[force, ->] (b2.center) -- ++(0, 0.8 * \radius) node[right] {$\rho V \vec{g}$};
-    \draw[force, ->] (b2.center) -- ++(-60:0.5 * \radius) node[above right] {$\vec{N}$};
-
+    \draw[force, ->] (b2.center) -- ++(0, 0.8 * \radius) node[above=-0.5em] {$\rho V \vec{g}$};
+    \draw[force, ->] (b2.center) ++(120:\radius) -- ++(-60:0.6 * \radius) node[left] {$\vec{N}$};
+    \draw[force, ->] (b2.center) ++(60:\radius) -- ++(-120:0.6 * \radius) node[right] {$\vec{N}$};
 
     % forces acting on the top timber
     \draw[force, ->] (t2.center) -- ++(0, -0.6 * \radius) node[right] {$m\vec{g}$};
