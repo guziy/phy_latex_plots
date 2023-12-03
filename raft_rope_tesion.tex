@@ -1,0 +1,114 @@
+\documentclass[tikz,border=80pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{scopes}
+\usepackage{verbatim}
+\usetikzlibrary{calc,angles,patterns,quotes}
+\usetikzlibrary{positioning}
+
+
+\tikzset{
+    right angle quadrant/.code={
+        \pgfmathsetmacro\quadranta{{1,1,-1,-1}[#1-1]}     % Arrays for selecting quadrant
+        \pgfmathsetmacro\quadrantb{{1,-1,-1,1}[#1-1]}},
+    right angle quadrant=1, % Make sure it is set, even if not called explicitly
+    right angle length/.code={\def\rightanglelength{#1}},   % Length of symbol
+    right angle length=1ex, % Make sure it is set...
+    right angle symbol/.style n args={3}{
+        insert path={
+            let \p0 = ($(#1)!(#3)!(#2)$) in     % Intersection
+                let \p1 = ($(\p0)!\quadranta*\rightanglelength!(#3)$), % Point on base line
+                \p2 = ($(\p0)!\quadrantb*\rightanglelength!(#2)$) in % Point on perpendicular line
+                let \p3 = ($(\p1)+(\p2)-(\p0)$) in  % Corner point of symbol
+            (\p1) -- (\p3) -- (\p2)
+        }
+    }
+}
+
+
+
+\begin{document}
+
+\def\iangle{35} % Angle of the inclined plane
+\def\down{-90}
+\def\arcr{0.5cm} % Radius of the arc used to indicate angles
+\def\ang{30}
+\def\radius{5em} % radiaus of a timber
+\def\dotsize{0.1em}
+
+\begin{tikzpicture}[
+    force/.style={>=latex, very thick,draw=gray,fill=gray},
+    axis/.style={densely dashed,gray},
+    M/.style={rectangle,draw,fill=lightgray,minimum size=0.5cm,thin},
+    m/.style={rectangle,draw=black,fill=lightgray,minimum size=0.3cm,thin},
+    plane/.style={draw=black,fill=blue!10},
+    string/.style={draw=red, thick},
+    pulley/.style={thick},
+    timber-fill/.style={pattern=north west lines, pattern color=brown!50}
+]
+
+
+    \node (rotation_center) at (0, 0) {};
+    \node (angle_beg) at (1cm, 0) {};
+    \node (angle_end) at (0.866cm, 0.5cm) {};
+
+
+
+    \draw[timber-fill] (0,0) circle [radius=\radius] node(b1){}
+        ++(2*\radius, 0) circle [radius=\radius] node(b2){}
+        ++(2*\radius, 0) circle [radius=\radius] node(b3){}
+        ++(2*\radius, 0) circle [radius=\radius] node(b4){};
+    
+    \draw[timber-fill] (b1) 
+        ++(60:2*\radius) circle [radius=\radius] node(t1){}
+        ++(2*\radius, 0) circle [radius=\radius] node(t2){}
+        ++(2*\radius, 0) circle [radius=\radius] node(t3){};
+
+    \node (bleft) [left=2*\radius of b1.center]{};
+    \node (bright)[right=2*\radius of b4.center]{};
+
+    \node (bleft-rope) [below=\radius of bleft.center, anchor=center] {...};
+    \node (bright-rope) [below=\radius of bright.center, anchor=center] {...};
+
+    \draw[very thick] (bleft-rope) -- (bright-rope);
+
+    
+    
+    
+    \node[above=sqrt(3) * \radius of bleft.center, anchor=center](tleft){};
+    \node[above=sqrt(3) * \radius of bright.center, anchor=center](tright){};
+
+    \node [above=\radius of tleft.center, anchor=center] (tleft-rope) {...};
+    \node [above=\radius of tright.center, anchor=center] (tright-rope) {...};
+    \draw[very thick] (tleft-rope) -- (tright-rope);
+
+    \fill[fill opacity=0.3, blue!30] (bleft-rope.south west) rectangle (tright.east);
+    
+
+    \draw[dashed, gray] (b2.center) -- (t2.center);
+    \draw[dashed, gray] (b2.center) -- (t1.center);
+    \draw[dashed, gray] (b3.center) -- (t2.center);
+
+    % forces acting on the bottom timber
+    \draw[force, ->] (b2.center) -- ++(0, -0.6 * \radius) node[right] {$m\vec{g}$};
+    \draw[force, ->] (b2.center) -- ++(0, 0.8 * \radius) node[right] {$\rho V \vec{g}$};
+    \draw[force, ->] (b2.center) -- ++(-60:0.5 * \radius) node[above right] {$\vec{N}$};
+
+
+    % forces acting on the top timber
+    \draw[force, ->] (t2.center) -- ++(0, -0.6 * \radius) node[right] {$m\vec{g}$};
+
+
+    % mark timber centers
+    \draw[fill=black] (b2.center) circle[radius=\dotsize];
+    \draw[fill=black] (b3.center) circle[radius=\dotsize];
+    \draw[fill=black] (t2.center) circle[radius=\dotsize];
+    \draw[fill=black] (t1.center) circle[radius=\dotsize];
+
+
+
+
+\end{tikzpicture}
+
+
+
+\end{document}
