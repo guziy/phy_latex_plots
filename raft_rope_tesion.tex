@@ -34,6 +34,8 @@
 \def\ang{30}
 \def\radius{5em} % radiaus of a timber
 \def\dotsize{0.1em}
+\def\nsize{0.5}
+
 
 \begin{tikzpicture}[
     force/.style={>=latex, very thick,draw=gray,fill=gray},
@@ -60,7 +62,7 @@
     
     \draw[timber-fill] (b1) 
         ++(60:2*\radius) circle [radius=\radius] node(t1){}
-        ++(2*\radius, 0) circle [radius=\radius] node(t2){}
+        ++(2*\radius, 0) circle [radius=\radius,color=red] node(t2){}
         ++(2*\radius, 0) circle [radius=\radius] node(t3){};
 
     \node (bleft) [left=2*\radius of b1.center]{};
@@ -72,6 +74,21 @@
     \draw[very thick] (bleft-rope) -- (bright-rope);
 
     
+    % mark the right hand system
+    \draw[red] (t2.center) circle[radius=\radius]
+               (t3.center) circle[radius=\radius]
+               (b3.center) circle[radius=\radius]
+               (b4.center) circle[radius=\radius];
+
+    \path (t2.center) ++(-\radius, 0) node (p1){};
+    \draw[force, red, ->] (p1.center) -- ++(0.3 * \radius, 0) node[above]{$\vec{P_1}$};
+    \draw[force, red, ->] (p1.center) circle[radius=\dotsize];
+
+    \path (b3.center) ++(-\radius, 0) node (p2){};
+    \draw[force, red, ->] (p2.center) -- ++(0.3 * \radius, 0) node[above]{$\vec{P_2}$};
+    \draw[force, red, ->] (p2.center) circle[radius=\dotsize];
+
+    % end finish marking right hand system
     
     
     \node[above=sqrt(3) * \radius of bleft.center, anchor=center](tleft){};
@@ -91,11 +108,15 @@
     % forces acting on the bottom timber
     \draw[force, ->] (b2.center) -- ++(0, -0.6 * \radius) node[right] {$m\vec{g}$};
     \draw[force, ->] (b2.center) -- ++(0, 0.8 * \radius) node[above=-0.5em] {$\rho V \vec{g}$};
-    \draw[force, ->] (b2.center) ++(120:\radius) -- ++(-60:0.6 * \radius) node[left] {$\vec{N}$};
-    \draw[force, ->] (b2.center) ++(60:\radius) -- ++(-120:0.6 * \radius) node[right] {$\vec{N}$};
+    \draw[force, ->] (b2.center) ++(120:\radius) -- ++(-60:\nsize * \radius) node[left] {$\vec{N}$};
+    \draw[force, ->] (b2.center) ++(60:\radius) -- ++(-120:\nsize * \radius) node[right] {$\vec{N}$};
+    
 
     % forces acting on the top timber
-    \draw[force, ->] (t2.center) -- ++(0, -0.6 * \radius) node[right] {$m\vec{g}$};
+    \draw[force, ->] (t2.center) -- ++(0, -\nsize * \radius) node[below=-0.5em] {$m\vec{g}$};
+    \draw[force, ->, red] (t2.center) ++(-120:\radius) -- ++(60:\nsize * \radius) node[left] {$\vec{N}$};
+    \draw[force, ->] (t2.center) ++(-60:\radius) -- ++(120:\nsize * \radius) node[right=0.1em] {$\vec{N}$};
+    \draw[force, ->] (t2.center) -- ++(0, 0.4 * \radius) node[right] {$\rho V \vec{g}/2$};
 
 
     % mark timber centers
@@ -104,9 +125,31 @@
     \draw[fill=black] (t2.center) circle[radius=\dotsize];
     \draw[fill=black] (t1.center) circle[radius=\dotsize];
 
+   % mark vertical forces from the ropes
+    \foreach \n in {1,...,4} {
+        \draw[force, ->] (b\n.center) ++(-90:\radius) -- ++(90:0.3 * \radius) node[left] {$2\vec{F}$};
+    }
+    \foreach \n in {1,...,3} {
+        \draw[force, ->] (t\n.center) ++(90:\radius) -- ++(-90:0.3 * \radius) node[left] {$2\vec{F}$};
+    }
 
 
 
+    % mark timber tangent points
+    \draw[fill=black] (t2.center) ++(-120:\radius) circle[radius=\dotsize];
+    \draw[fill=black] (t2.center) ++(-60:\radius) circle[radius=\dotsize];
+    \draw[fill=black] (t1.center) ++(-60:\radius) circle[radius=\dotsize];
+
+    % rope tension forces (horizontal)
+    \draw[force, red, ->, very thick] (t2.center) ++(90:\radius) -- 
+                                                  ++(180:\radius) node[above]{$2\vec{T}$};
+    \draw[force, red, ->] (t2.center) ++(90:\radius) circle[radius=\dotsize];
+
+    \draw[force, red, ->, very thick] (b3.center) ++(-90:\radius) -- 
+        ++(180:\radius) node[above]{$2\vec{T}$};
+    \draw[force, red, ->] (b3.center) ++(-90:\radius) circle[radius=\dotsize];
+
+ 
 \end{tikzpicture}
 
 
