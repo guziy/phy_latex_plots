@@ -1,0 +1,122 @@
+\documentclass[tikz,border=5pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{scopes}
+\usepackage{verbatim}
+\usetikzlibrary{calc,angles,patterns,quotes,patterns.meta}
+\usepackage{pgfplots}
+\usepackage{pgf}
+\pgfplotsset{compat=newest}
+\pgfplotsset{plot coordinates/math parser=false}
+
+
+
+
+\begin{document}
+
+\def\iangle{35} % Angle of the inclined plane
+\def\down{-90}
+\def\arcr{0.5cm} % Radius of the arc used to indicate angles
+\def\ang{30}
+\def\rodlength{1}
+\def\soundspeed{1}
+\def\shellLength{15em}
+\def\shellHeight{5em}
+
+\tikzset{   
+    force/.style={>=latex,draw=blue,fill=blue,line width=0.1em},
+    axis/.style={densely dashed,gray},
+    M/.style={rectangle,draw,fill=lightgray,minimum size=0.5cm,thin},
+    m/.style={rectangle,draw=black,fill=lightgray,minimum size=0.3cm,thin},
+    plane/.style={draw=black,fill=blue!10},
+    string/.style={draw=red, thick},
+    pulley/.style={thick},
+    bubble/.style={circle, draw, line width=0.001, inner sep=0pt, fill=gray!10}
+}
+
+
+% figure 1
+\begin{tikzpicture}
+    
+    \newcommand{\shellContour}{
+        (0, 0) 
+        -- ++(0, -\shellHeight) node (lowerLeftShellTip){}
+        -- ++(0.7*\shellLength, 0) 
+        to [out=0, in=-160] ++(0.3*\shellLength, 0.1*\shellHeight) node (lowerRightShellTip){} 
+        -- ++(-0.4*\shellLength, 0.4*\shellHeight) node (innerConeTip){}
+        -- ++(0.4*\shellLength, 0.4*\shellHeight) node (upperRightShellTip){}
+        to [out=160, in=0] ++(-0.3*\shellLength, 0.1*\shellHeight) -- cycle
+    }
+
+    \filldraw[color=gray!30] \shellContour;
+
+    \node[bubble, minimum size=0.25em] at (0.1*\shellLength, -0.23*\shellHeight) {};
+    \node[bubble, minimum size=0.15em] at (0.8*\shellLength, -0.15*\shellHeight) {};
+    \node[bubble, minimum size=0.3em] at (0.4*\shellLength, -0.16*\shellHeight) {};
+    \node[bubble, minimum size=0.35em] at (0.5*\shellLength, -0.51*\shellHeight) {};
+    \node[bubble, minimum size=0.15em] at (0.3*\shellLength, -0.63*\shellHeight) {};
+    \node[bubble, minimum size=0.16em] at (0.2*\shellLength, -0.4*\shellHeight) {};
+    \node[bubble, minimum size=0.35em] at (0.1*\shellLength, -0.8*\shellHeight) {};
+    \node[bubble, minimum size=0.25em] at (0.85*\shellLength, -0.85*\shellHeight) {};
+    \node[bubble, minimum size=0.3em] at (0.65*\shellLength, -0.75*\shellHeight) {};
+    \node[bubble, minimum size=0.3em] at (0.45*\shellLength, -0.9*\shellHeight) {};
+    \node[bubble, minimum size=0.3em] at (0.65*\shellLength, -0.1*\shellHeight) {};
+
+    \draw[line width=0.005em] \shellContour;
+
+    \node (wallLowerLeft) at ([xshift=1.3*\shellLength, yshift=-1.1*\shellHeight]lowerLeftShellTip.center){};
+
+    \draw [line width=0.25em] (wallLowerLeft.center)
+        -- ++(0, 3.2*\shellHeight) node[inner sep=0] (wallUpperLeft){};
+
+    \draw [line width=0.005em, color=gray] (wallUpperLeft.center)
+        to[out=45, in=235] ++(0.5*\shellLength, 0) node (wallUpperRight){};
+
+    \draw [line width=0.25em] (wallUpperRight.center)
+        -- ++(0, -3.2*\shellHeight) node[inner sep=0] (wallLowerRight){};
+    
+    \draw [line width=0.005em, color=gray] (wallLowerLeft.center)
+        to[out=45, in=235] ++(0.5*\shellLength, 0) node (wallLowerRight){};
+    
+    \fill[gray!20] (wallLowerLeft.south) -- 
+                   (wallUpperLeft.north) to[out=45, in=235]
+                   (wallUpperRight.north) --
+                   (wallLowerRight.south) to[out=235, in=45] cycle;
+                   
+
+
+    
+    % mark angles
+    \draw[gray, line width=0.1em] pic ["$\alpha = {\rm 30^\circ}$", 
+        draw=gray, 
+        angle eccentricity=1.2, 
+        angle radius=2em,
+        pic text options={shift={(1.5em,0em)}}]{
+            angle=lowerRightShellTip--innerConeTip--upperRightShellTip};
+
+    % draw the conic wall
+    \draw [line width=0.15em] (lowerRightShellTip.center) 
+                -- (innerConeTip.center) -- (upperRightShellTip.center);
+
+
+
+    \draw[force,>=latex,->] ([xshift=0.4*\shellLength]innerConeTip.center) -- 
+                            ++(3em, 0) node[midway](leftVTip)[label={above:$\vec{v}_0$}] {};
+    
+    \draw[force,>=latex,->] ([xshift=0.4*\shellLength]leftVTip.center) -- 
+                            ++(1.5em, 0) node[midway](middleVTip)[label={above:$\vec{v}_0/2$}] {};
+
+    \draw[force,>=latex,->] ([xshift=0.4*\shellLength]middleVTip.center) -- 
+                            ++(3em, 0) node[midway](middleVTip)[label={above:$\vec{v}_0$}] {};
+
+
+    % object and forces acting on it
+    % \draw (0cm, 0cm) rectangle ++(6cm, 0.4cm) -- ++(0, -0.2cm) node (right_edge){};
+    % \node[anchor=south] at (3cm, 0.4cm) {$L$};
+    % \node[anchor=east] at (0cm, 0.2cm) {$S$};
+
+    % \draw[force,>=latex,<-] (right_edge) -- ++(1, 0) node[right] {$F=F_0 \sin (\omega t)$};
+\end{tikzpicture}
+
+
+
+\end{document}
