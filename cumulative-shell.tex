@@ -2,7 +2,7 @@
 \usepackage{tikz}
 \usetikzlibrary{scopes}
 \usepackage{verbatim}
-\usetikzlibrary{calc,angles,patterns,quotes,patterns.meta}
+\usetikzlibrary{calc,angles,patterns,quotes,patterns.meta, intersections}
 \usepackage{pgfplots}
 \usepackage{pgf}
 \pgfplotsset{compat=newest}
@@ -30,7 +30,8 @@
     plane/.style={draw=black,fill=blue!10},
     string/.style={draw=red, thick},
     pulley/.style={thick},
-    bubble/.style={circle, draw, line width=0.001, inner sep=0pt, fill=gray!10}
+    bubble/.style={circle, draw, line width=0.001, inner sep=0pt, fill=gray!10},
+    point/.style={circle, fill=black, inner sep=0, minimum width=0.2em, line width=0.05em}
 }
 
 
@@ -82,8 +83,6 @@
                    (wallUpperRight.north) --
                    (wallLowerRight.south) to[out=235, in=45] cycle;
                    
-
-
     
     % mark angles
     \draw[gray, line width=0.1em] pic ["$\alpha = {\rm 30^\circ}$", 
@@ -106,17 +105,62 @@
                             ++(1.5em, 0) node[midway](middleVTip)[label={above:$\vec{v}_0/2$}] {};
 
     \draw[force,>=latex,->] ([xshift=0.4*\shellLength]middleVTip.center) -- 
-                            ++(3em, 0) node[midway](middleVTip)[label={above:$\vec{v}_0$}] {};
+                            ++(2.5em, 0) node[midway](middleVTip)[label={above:$\vec{v}_0$}] {};
 
-
-    % object and forces acting on it
-    % \draw (0cm, 0cm) rectangle ++(6cm, 0.4cm) -- ++(0, -0.2cm) node (right_edge){};
-    % \node[anchor=south] at (3cm, 0.4cm) {$L$};
-    % \node[anchor=east] at (0cm, 0.2cm) {$S$};
-
-    % \draw[force,>=latex,<-] (right_edge) -- ++(1, 0) node[right] {$F=F_0 \sin (\omega t)$};
 \end{tikzpicture}
 
+% figure 2
+\begin{tikzpicture}
+    
+    \node[inner sep=0] (innerConeTip) {};
 
+    \draw[line width=0.1em] (innerConeTip.center) -- ++(25:10em) 
+                            node[pos=0.75, inner sep=0](vbeg){} 
+                            node[draw,point,label={above:$B$}] (upperTip) {};
+
+    \draw[line width=0.05em, axis] (innerConeTip.center) -- ++(0:10em) node (axisRight){};
+
+
+    \draw[force, ->] (innerConeTip.center) -- ++(0:5em) 
+                                              node[right, inner sep=0](v0Tip)[label={below:$\vec{v}_0$}] {};
+    
+    
+    \draw[force, ->] (vbeg.center) -- ++(-65:1.5em) 
+                                      node[label={right:$\vec{v}=?$}, inner sep=0](vend){};
+
+
+    % right angle mark
+    \path (vbeg.center)  -- ++(-155:0.3em) node(ra_p1){} 
+                         -- ++(-65:0.3em) node(ra_p2){}
+                         -- ++(25:0.3em) node(ra_p3){};
+    
+    \draw[gray] (ra_p1.center) -- (ra_p2.center) -- (ra_p3.center); 
+
+    \node[draw,point, label={below:$A$}] at (innerConeTip.center) {};
+
+    % mark angles
+    \draw[gray, line width=0.1em] pic ["$\alpha/2$", 
+        draw=gray, 
+        angle eccentricity=1.2, 
+        angle radius=1.5em,
+        pic text options={shift={(1.em, 0.2em)}}]{
+            angle=axisRight--innerConeTip--upperTip};
+
+
+    \path [name path=abpth] (innerConeTip.center) -- (upperTip.center);
+    \path [name path=upth] (vend.center) -- ++(-180:8em);
+    \path [name intersections={of=abpth and upth, by=ubeg}];
+    \draw[force, gray!30, <-] (vend.center) -- (ubeg.center) node[midway](ulabel){};
+    \node[below=-0.2em] at (ulabel){$\vec{u}$};
+
+
+    \path (vbeg.center) -- ++(115:0.4em) node (vbeg_shift){};
+    \path (ubeg.center) -- ++(115:0.4em) node (ubeg_shift){};
+
+    \draw[force, gray!30, <-, opacity=0.6] (ubeg_shift.center) -- (vbeg_shift.center) node[midway](v1label){};
+    \node[above] at (v1label.center){$\vec{v}_1$};
+
+    
+\end{tikzpicture}
 
 \end{document}
