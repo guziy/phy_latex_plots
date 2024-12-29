@@ -1,12 +1,13 @@
-\documentclass[tikz,border=5pt]{standalone}
+\documentclass[tikz,border=10em]{standalone}
 \usepackage{tikz}
 \usetikzlibrary{scopes}
 \usepackage{verbatim}
-\usetikzlibrary{calc,angles,patterns,quotes,patterns.meta, intersections}
+\usetikzlibrary{calc,angles,patterns,quotes,patterns.meta, intersections, positioning}
 \usepackage{pgfplots}
 \usepackage{pgf}
 \pgfplotsset{compat=newest}
 \pgfplotsset{plot coordinates/math parser=false}
+
 
 
 
@@ -22,21 +23,22 @@
 \def\shellLength{15em}
 \def\shellHeight{5em}
 
+
 \tikzset{   
     force/.style={>=latex,draw=blue,fill=blue,line width=0.1em},
-    axis/.style={densely dashed,gray},
+    axis/.style={densely dashed,gray,>=latex},
     M/.style={rectangle,draw,fill=lightgray,minimum size=0.5cm,thin},
     m/.style={rectangle,draw=black,fill=lightgray,minimum size=0.3cm,thin},
     plane/.style={draw=black,fill=blue!10},
     string/.style={draw=red, thick},
     pulley/.style={thick},
     bubble/.style={circle, draw, line width=0.001, inner sep=0pt, fill=gray!10},
-    point/.style={circle, fill=black, inner sep=0, minimum width=0.2em, line width=0.05em}
+    point/.style={circle, fill=black, inner sep=0, minimum width=0.5em, line width=0}
 }
 
 
 % figure 1
-\begin{tikzpicture}
+\begin{tikzpicture}[scale=1]
     
     \newcommand{\shellContour}{
         (0, 0) 
@@ -64,16 +66,16 @@
 
     \draw[line width=0.005em] \shellContour;
 
-    \node (wallLowerLeft) at ([xshift=1.3*\shellLength, yshift=-1.1*\shellHeight]lowerLeftShellTip.center){};
+    \node (wallLowerLeft) at ([xshift=1.3*\shellLength, yshift=-0.6*\shellHeight]lowerLeftShellTip.center){};
 
     \draw [line width=0.25em] (wallLowerLeft.center)
-        -- ++(0, 3.2*\shellHeight) node[inner sep=0] (wallUpperLeft){};
+        -- ++(0, 2*\shellHeight) node[inner sep=0] (wallUpperLeft){};
 
     \draw [line width=0.005em, color=gray] (wallUpperLeft.center)
         to[out=45, in=235] ++(0.5*\shellLength, 0) node (wallUpperRight){};
 
     \draw [line width=0.25em] (wallUpperRight.center)
-        -- ++(0, -3.2*\shellHeight) node[inner sep=0] (wallLowerRight){};
+        -- ++(0, -2*\shellHeight) node[inner sep=0] (wallLowerRight){};
     
     \draw [line width=0.005em, color=gray] (wallLowerLeft.center)
         to[out=45, in=235] ++(0.5*\shellLength, 0) node (wallLowerRight){};
@@ -89,7 +91,7 @@
         draw=gray, 
         angle eccentricity=1.2, 
         angle radius=2em,
-        pic text options={shift={(1.5em,0em)}}]{
+        pic text options={shift={(1.5em,0em)}, color=black}]{
             angle=lowerRightShellTip--innerConeTip--upperRightShellTip};
 
     % draw the conic wall
@@ -104,17 +106,23 @@
     \draw[force,>=latex,->] ([xshift=0.4*\shellLength]leftVTip.center) -- 
                             ++(1.5em, 0) node[midway](middleVTip)[label={above:$\vec{v}_0/2$}] {};
 
-    \draw[force,>=latex,->] ([xshift=0.4*\shellLength]middleVTip.center) -- 
+    \draw[force,>=latex,->] ([xshift=0.3*\shellLength]middleVTip.center) -- 
                             ++(2.5em, 0) node[midway](middleVTip)[label={above:$\vec{v}_0$}] {};
+
+    \node[label={above:$A$}, inner sep=0] at (innerConeTip.center){};
+    \node[label={above:$B$}, inner sep=0] at (upperRightShellTip.center){};
+
 
 \end{tikzpicture}
 
+\newpage
+
 % figure 2
-\begin{tikzpicture}
+\begin{tikzpicture}[scale=3]
     
     \node[inner sep=0] (innerConeTip) {};
 
-    \draw[line width=0.1em] (innerConeTip.center) -- ++(25:10em) 
+    \draw[line width=0.3em] (innerConeTip.center) -- ++(25:10em) 
                             node[pos=0.75, inner sep=0](vbeg){} 
                             node[draw,point,label={above:$B$}] (upperTip) {};
 
@@ -150,17 +158,221 @@
     \path [name path=abpth] (innerConeTip.center) -- (upperTip.center);
     \path [name path=upth] (vend.center) -- ++(-180:8em);
     \path [name intersections={of=abpth and upth, by=ubeg}];
-    \draw[force, gray!30, <-] (vend.center) -- (ubeg.center) node[midway](ulabel){};
+    \draw[force, gray, <-] (vend.center) -- (ubeg.center) node[midway](ulabel){};
     \node[below=-0.2em] at (ulabel){$\vec{u}$};
 
 
     \path (vbeg.center) -- ++(115:0.4em) node (vbeg_shift){};
     \path (ubeg.center) -- ++(115:0.4em) node (ubeg_shift){};
 
-    \draw[force, gray!30, <-, opacity=0.6] (ubeg_shift.center) -- (vbeg_shift.center) node[midway](v1label){};
+    \draw[force, gray, <-, opacity=0.6] (ubeg_shift.center) -- (vbeg_shift.center) node[midway](v1label){};
     \node[above] at (v1label.center){$\vec{v}_1$};
 
     
 \end{tikzpicture}
+
+\newpage 
+
+% figure 3
+
+
+\begin{tikzpicture}[scale=1.5]
+    \def\holeR{2em}
+    \def\jetR{1em}
+    \def\jetGap{0.1em}
+    \newcommand{\wallWidth}{10em}
+    \path (0, 0) node(leftMiddle){} -- ++(0:18em) 
+                                    node[pos=0.1](v0Label){}
+                                    node(rightMiddle){};
+
+
+    \node[right=15em of leftMiddle.center] (holeCenter){};
+
+
+    \node[below=8em of holeCenter.center] (lowerLeftWall){};
+    \node[right=\wallWidth of lowerLeftWall.center] (lowerRightWall) {};
+    \node[above=8em of holeCenter.center] (upperLeftWall){};
+    \node[right=\wallWidth of upperLeftWall.center] (upperRightWall) {};
+
+
+
+
+    \draw ([yshift=-\holeR]holeCenter.center) node(holeLowerEdge){} -- ++(3em, 0) 
+                                                                    arc (-90:90:\holeR) node[midway](jetSplitTip){}
+                                                                    -- ++(-3em, 0) node(holeUpperEdge){};
+
+
+    % 4r label
+    \draw[axis] (holeUpperEdge.center) -- ++(0:\wallWidth) node[pos=0.9](holeSizeMarkTop){};
+    \draw[axis] (holeLowerEdge.center) -- ++(0:\wallWidth) node[pos=0.9](holeSizeMarkBot){};
+    \draw[axis, <->] (holeSizeMarkTop.center) -- (holeSizeMarkBot.center) node[midway, inner sep=0](holeWidthLabel){};
+    \node[label={right:$4r$}, inner sep=0] at (holeWidthLabel){};
+
+
+    % armored wall                                                                    
+    \draw [line width=0.3em] (lowerLeftWall.center){} -- (holeLowerEdge.center) 
+                             (holeUpperEdge.center) -- (upperLeftWall.center);
+                             
+    \draw [line width=0.3em] (lowerRightWall.center) -- (upperRightWall.center);
+
+    %hatch the wall
+    \draw[pattern=north west lines, pattern color=black] (lowerLeftWall.center) 
+                        -- (holeLowerEdge.center) 
+                        -- ++(3em, 0) arc (-90:90:\holeR) -- ++(-3em, 0)
+                        -- (upperLeftWall.center) -- (upperRightWall.center) -- (lowerRightWall.center) -- cycle;
+
+
+
+    \draw [gray, line width=0.1em] ([yshift=\jetR]leftMiddle.center)
+                            -- ([xshift=-\jetR*1.3,yshift=\jetR]jetSplitTip.center)
+                            arc (-90:90:\jetGap)
+                            -- ++(180:7em) node (upperJetLowerExit){};
+    \draw [gray, line width=0.1em, ->, force] (upperJetLowerExit.center) -- ++(180:0.5em);
+    
+    
+    \draw [gray, line width=0.1em] ([yshift=-\jetR]leftMiddle.center)
+                            -- ([xshift=-\jetR*1.3,yshift=-\jetR]jetSplitTip.center)
+                            arc (90:-90:\jetGap)
+                            -- ++(180:7em) node (lowerJetUpperExit){};
+    \draw [gray, line width=0.1em, ->, force] (lowerJetUpperExit.center) -- ++(180:0.5em);
+
+
+    % jet return flow outer side
+    \draw [gray, line width=0.1em] ([yshift=-\jetGap]holeUpperEdge.center) -- ++(180:3em) node (upperJetUpperExit){};
+    
+    \draw [line width=0.1em, ->, force] (upperJetUpperExit.center) -- ++(180:0.5em);
+    
+    \draw [gray, line width=0.1em] ([yshift=-\jetGap]holeUpperEdge.center) 
+                          -- ++(0:3em) arc (90:-90:\holeR-\jetGap) 
+                          -- ++(180:6em) node (lowerJetLowerExit){};
+
+    \draw [line width=0.1em, ->, force] (lowerJetLowerExit.center) -- ++(180:0.5em);
+
+
+
+    \draw[fill=gray!30, draw=none] (lowerJetLowerExit.center) -- ++(0:6em) 
+                                              arc (-90:90:\holeR-\jetGap)
+                                              -- (upperJetUpperExit.center)
+                                              -- (upperJetLowerExit.center)
+                                              -- ++(0:7em)
+                                              arc (90:-90:\jetGap)
+                                              -- ([yshift=\jetR]leftMiddle.center)
+                                              -- ([yshift=-\jetR]leftMiddle.center)
+                                              --  ([xshift=-\jetR*1.3,yshift=-\jetR]jetSplitTip.center)
+                                              arc (90:-90:\jetGap) 
+                                              -- (lowerJetUpperExit.center) -- cycle;
+
+    \draw[axis, line width=0.1em] (leftMiddle.center) -- (rightMiddle.center);
+    \draw[force,->] (v0Label) -- ++(0:2em) node[midway,label={above:$\vec{v}_0$}, inner sep=0]{};
+
+    % 2r label
+    \draw[axis, <->] ([yshift=-\jetR, xshift=-1em]leftMiddle.center) --
+                     ([yshift=\jetR, xshift=-1em]leftMiddle.center) 
+                     node[midway, inner sep=0] (jetWidthLabel){};
+
+    \draw[axis] ([yshift=-\jetR]leftMiddle.center) -- ++(180:2em);
+    \draw[axis] ([yshift=\jetR]leftMiddle.center) -- ++(180:2em);
+    \node[label={left:$2r$}, inner sep=0] at (jetWidthLabel){};
+
+
+\end{tikzpicture}
+
+\newpage
+
+
+
+%figure 4
+
+\begin{tikzpicture}[scale=1.7]
+
+    \def\wallWidth{10em}
+    \def\trWidth{1em}
+    \def\jetR{1em}
+
+    \path (0, 0) node(leftMiddle){} -- ++(0:25em) 
+                                    node[pos=0.1](v0Label){}
+                                    node(rightMiddle){};
+
+
+    \node[at=(leftMiddle.center), xshift=15em] (holeCenter){};
+
+    \draw[green, line width=1em] (holeCenter.center) -- ++(\wallWidth, 0);
+
+
+    \node[at=(holeCenter.center), yshift=-8em] (lowerLeftWall){};
+    \node[at=(lowerLeftWall.center), xshift=\wallWidth] (lowerRightWall) {};
+    \node[at=(holeCenter.center), yshift=8em] (upperLeftWall){};
+    \node[at=(upperLeftWall.center), xshift=\wallWidth] (upperRightWall) {};
+    
+
+    \path (lowerLeftWall.center) -- (upperLeftWall.center) node[midway] (frontHoleCenter){};
+    \path (lowerRightWall.center) -- (upperRightWall.center) node[midway] (backHoleCenter){};
+    \path (frontHoleCenter.center) -- ++(0, -2*\jetR) node (frontHoleLowerEdge){};
+    \path (frontHoleCenter.center) -- ++(0, 2*\jetR) node (frontHoleUpperEdge){};
+
+
+    \path (backHoleCenter.center) -- ++(0, -2*\jetR) node (backHoleLowerEdge){};
+    \path (backHoleCenter.center) -- ++(0, 2*\jetR) node (backHoleUpperEdge){};
+
+    \path (frontHoleCenter.center) -- (backHoleCenter.center) node[midway] (middleInsideArmor){};
+
+
+    
+    % armored wall                                                                    
+    \draw [line width=0.3em] (lowerLeftWall.center) -- (upperLeftWall.center);
+    \draw [line width=0.3em] (lowerRightWall.center) -- (upperRightWall.center);
+
+    %hatch the wall
+    \draw[pattern=north west lines, pattern color=black] (lowerLeftWall.center) 
+                        -- (upperLeftWall.center) 
+                        -- (upperRightWall.center) 
+                        -- (lowerRightWall.center) -- cycle;
+
+
+    
+
+    \draw[fill=gray!30] ([yshift=\jetR]leftMiddle.center) -- 
+                        ([xshift=-\trWidth, yshift=\jetR]frontHoleCenter.center) to[out=0, in=180]
+                        (frontHoleUpperEdge.center) -- 
+                        (backHoleUpperEdge.center) to [out=0, in=180]
+                        ([xshift=\trWidth, yshift=\jetR]backHoleCenter.center) --
+                        ++(5em, 0) to node[midway] (jetRightEdge){}
+                        ++(0, -2*\jetR) --
+                        ([xshift=\trWidth, yshift=-\jetR]backHoleCenter.center) to [out=180,in=0]
+                        ([yshift=-2*\jetR]backHoleCenter.center) --
+                        (frontHoleLowerEdge.center) to [out=180, in=0] 
+                        ([xshift=-\trWidth, yshift=-\jetR]frontHoleCenter.center) to
+                        ([yshift=-\jetR]leftMiddle.center) to cycle;
+    
+    \draw[gray!30] ([yshift=\jetR]leftMiddle.center) -- ([yshift=-\jetR]leftMiddle.center);
+    \draw[gray!30] ([yshift=\jetR]jetRightEdge.center) -- ([yshift=-\jetR]jetRightEdge.center);
+
+
+    \draw[axis, line width=0.1em] (leftMiddle.center) -- (rightMiddle.center);
+    \draw[force,->] (v0Label) -- ++(2em, 0) node[midway,label={above:$\vec{v}_0$}, inner sep=0]{};
+    \draw[force,->] (middleInsideArmor.center) -- ++(1em, 0) node[midway,label={above:$\vec{v}_0/2$}, inner sep=0]{};
+
+    \draw[force,<-] (jetRightEdge.center) -- ++(-2em, 0) node[midway,label={above:$\vec{v}_0$}, inner sep=0]{};
+
+    % 2r label
+    \draw[axis, <->] ([yshift=-\jetR, xshift=-1em]leftMiddle.center) --
+                     ([yshift=\jetR, xshift=-1em]leftMiddle.center) 
+                     node[midway, inner sep=0] (jetWidthLabel){};
+
+    \draw[axis] ([yshift=-\jetR]leftMiddle.center) -- ++(180:2em); 
+    \draw[axis] ([yshift=\jetR]leftMiddle.center) -- ++(180:2em);
+    \node[label={left:$2r$}, inner sep=0] at (jetWidthLabel){};
+
+
+     % 4r label
+     \draw[axis] (backHoleUpperEdge.center) -- ++(\trWidth * 2, 0) node[pos=0.9](holeSizeMarkTop){};
+     \draw[axis] (backHoleLowerEdge.center) -- ++(\trWidth * 2, 0) node[pos=0.9](holeSizeMarkBot){};
+     \draw[axis, <->] (holeSizeMarkTop.center) -- (holeSizeMarkBot.center) node[pos=0.1, inner sep=0](holeWidthLabel){};
+     \node[label={right:$4r$}, inner sep=0] at (holeWidthLabel){};
+ 
+
+\end{tikzpicture}
+
+
 
 \end{document}
