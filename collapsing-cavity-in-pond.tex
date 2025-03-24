@@ -1,0 +1,74 @@
+\documentclass[tikz,border=20pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{scopes}
+\usepackage{verbatim}
+\usetikzlibrary{calc,angles,patterns,quotes}
+\usepackage{pgfplots}
+\usepackage{pgf}
+\usetikzlibrary{backgrounds}
+\pgfplotsset{compat=newest}
+\pgfplotsset{plot coordinates/math parser=false}
+
+
+\begin{document}
+
+\def\iangle{35} % Angle of the inclined plane
+\def\down{-90}
+\def\arcr{0.5cm} % Radius of the arc used to indicate angles
+\def\ang{30}
+\def\rodlength{1}
+\def\soundspeed{1}
+\def\hgt{10em}
+\def\lwdth{0.2em}
+
+\begin{tikzpicture}[
+    force/.style={>=latex,draw=blue,fill=blue,line width=0.5*\lwdth},
+    axis/.style={>=latex, densely dashed,gray},
+    M/.style={rectangle,draw,fill=lightgray,minimum size=0.5cm,thin},
+    m/.style={rectangle,draw=black,fill=lightgray,minimum size=0.3cm,thin},
+    plane/.style={draw=black,fill=blue!10},
+    string/.style={draw=red, thick},
+    pulley/.style={thick}
+]
+
+
+    \path[fill=blue!40] (-0.5*\hgt, -0.5*\hgt) node[inner sep=0] (lowerLeft) {} -- ++ (0, 2*\hgt) 
+                                           -- ++ (\hgt, 0) node [inner sep] (waterLevelRight) {}
+                                                           node [pos=0.3, above] {$S$}
+                                                           node [midway, below, inner sep=0] (waterLevelCenter) {}
+                                           -- ++ (0, -2*\hgt) node[inner sep=0] (lowerRight) {}
+                                           -- cycle;
+
+    % water depth measure
+    \draw (waterLevelRight.center) -- ++ (1.5em, 0) node[midway, inner sep=0] (topLevelMark){};
+    \draw (lowerRight.center) -- ++ (1.5em, 0) node[midway, inner sep=0] (botLevelMark){};
+    \draw[<->,axis] (topLevelMark.center) -- (botLevelMark.center) node [right, midway](hLabel){};
+    \node at ([xshift=0.2em]hLabel) {$h$};
+    \draw[force, ->] ([xshift=5em]waterLevelRight.center) -- ++(0, -2em) node [midway, left=0.3em, inner sep=0] {$\vec{g}$}; 
+
+
+
+    \path[draw=black, line width=\lwdth] (lowerLeft.center) -- ++ (0, 2.2*\hgt);
+    \path[draw=black, line width=\lwdth] (lowerRight.center) -- ++ (0, 2.2*\hgt);
+
+    \path[draw=black, line width=\lwdth] ([xshift=-0.5*\lwdth]lowerLeft.center) 
+        -- ++ (0.45*\hgt, 0) node[inner sep=0] (holeLeft) {};
+
+    \path[draw=black, line width=\lwdth] ([xshift=0.5*\lwdth]lowerRight.center) 
+        -- ++ (-0.45*\hgt, 0) node[inner sep=0] (holeRight) {};
+
+    
+    \path[fill=blue!40] ([yshift=0.1*\lwdth]holeLeft.center) 
+        to[out=-90, in=-90] node[midway, below, inner sep=0](holeCenter){} 
+                        ([yshift=0.1*\lwdth]holeRight.center) -- node[midway, above] {$\sigma$} cycle;
+
+
+    \draw[force, ->] (holeCenter.center) -- ++ (0, -4em) node[pos=0.9, right]{$\vec{v}_1$};
+    \draw[force, ->] (waterLevelCenter.center) -- ++ (0, -1em) node[pos=0.9, right]{$\vec{v}_0$};
+
+   
+
+
+\end{tikzpicture}
+
+\end{document}
