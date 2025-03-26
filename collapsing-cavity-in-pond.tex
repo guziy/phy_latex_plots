@@ -18,8 +18,8 @@
 \def\ang{30}
 \def\hgt{10em}
 \def\lwdth{0.2em}
-\def\R0{5em}
-\def\r0{2em}
+\def\R0{10.7em}
+\def\r0{2.7em}
 \def\dotr{0.1em}
 \def\parcelangle{30}
 
@@ -27,7 +27,7 @@
 \begin{tikzpicture}[
     background rectangle/.style={fill=Aquamarine!45}, show background rectangle,
     force/.style={>=latex,draw=blue,fill=blue,line width=0.5*\lwdth},
-    axis/.style={>=latex, densely dashed,gray},
+    axis/.style={>=latex, densely dashed,gray, line width=0.1em},
     M/.style={rectangle,draw,fill=lightgray,minimum size=0.5cm,thin},
     m/.style={rectangle,draw=black,fill=lightgray,minimum size=0.3cm,thin},
     plane/.style={draw=black,fill=blue!10},
@@ -35,34 +35,45 @@
     pulley/.style={thick}
 ]
 
-   
+    \node[inner sep=0] at (0,0) (CenterPoint) {};
 
-   \node[inner sep=0] at (0,0) (CenterPoint) {};
+    \draw[draw=none] (CenterPoint.center) circle(2*\R0); 
+    \filldraw[color=black, fill=white] (CenterPoint.center) circle(\r0);
+    
+    \draw[axis] (CenterPoint.center) circle(2.8 * \r0);
+    \draw[axis, ->] (CenterPoint.center) -- ++(75:2.8*\r0) node [color=black, anchor=south west, inner sep=0]{$r, u(r)=\dot{r}$};
 
-   \draw[draw=none] (CenterPoint.center) circle(2*\R0); 
-   \filldraw[color=black, fill=white] (CenterPoint.center) circle(\r0);
-   \node[above] at (CenterPoint.center) {$C$};
-   \draw[->, axis] (CenterPoint.center) -- (-45:\r0) node[right, below](r0label){}; 
-   \node[] at ([xshift=0.8em]r0label.center){$r_0$};
+    \node[left] at (CenterPoint.center) {$C$};
+    \draw[->, axis] (CenterPoint.center) -- (-45:\r0) node[inner sep=0](r0label){}; 
+    \node[anchor=north west, inner sep=0, text width=4em] at (r0label.center){$r_0$\\ $u(r_0)=?$};
 
-   \draw[->, axis] (CenterPoint.center) -- (-75:\R0) node[right, below](R0label){};
-   
-   \draw[->, axis] (CenterPoint.center) -- (\parcelangle:2.5*\R0) node [solid, draw=black, rotate=\parcelangle, minimum size=1.8em] (parcelCenter) {};
-   \path (parcelCenter.center) -- ++(\parcelangle:0.5em) node[rotate=\parcelangle](xlabel){$x$};
-   
+    \draw[->, axis] (CenterPoint.center) -- (-75:\R0) node[inner sep=0](R0label){};
 
-   \filldraw[color=black] (CenterPoint.center) circle(\dotr);
-   \node[] at ([xshift=0.8em, yshift=-0.2em]R0label.center){$R_0$};
+    \draw[->, axis] (CenterPoint.center) -- (\parcelangle:2.*\R0) 
+                                            node [solid, draw=black, rotate=\parcelangle, minimum size=1.8em] (parcelCenter) {};
 
-   \draw[gray!60] (parcelCenter.north east) -- ++(90+\parcelangle:0.5em) node [midway] (rightEdgeParcelExtent) {};
-   \draw[gray!60] (parcelCenter.north west) -- ++(90+\parcelangle:0.5em) node [midway] (leftEdgeParcelExtent) {};
 
-   \draw[<->, axis] (leftEdgeParcelExtent.center) -- 
+    \path (parcelCenter.center) -- ++(\parcelangle:0.5em) node[rotate=\parcelangle](xlabel){$x$};
+
+    \draw[axis] (parcelCenter.center) -- ++(\parcelangle - 90:3em) node[pos=0.6](pForceBase){};
+    \draw[force, ->] (pForceBase.center) -- ++(\parcelangle - 180:4em) 
+                                            node[pos=0.8, below, rotate=\parcelangle]{$f_x=-\frac{\partial P}{\partial x}$};
+
+
+    \filldraw[color=black] (CenterPoint.center) circle(\dotr);
+    \node[anchor=north west, inner sep=0] at (R0label.center){$R_0, u(R_0)=0$};
+
+    \draw[gray!60] (parcelCenter.north east) -- ++(90+\parcelangle:0.5em) node [midway] (rightEdgeParcelExtent) {};
+    \draw[gray!60] (parcelCenter.north west) -- ++(90+\parcelangle:0.5em) node [midway] (leftEdgeParcelExtent) {};
+
+    \draw[<->, axis] (leftEdgeParcelExtent.center) -- 
                     (rightEdgeParcelExtent.center) node [midway, color=black, above, rotate=\parcelangle] {$dx$}; 
 
-   \draw[dashed] (CenterPoint.center) circle(\R0);
 
-   \path (CenterPoint.center) -- ++(120:3*\R0) node[draw=black]{$P(+\infty) = P_0$};
+    \filldraw[color=black] (parcelCenter.center) circle(\dotr);
+    \draw[dashed] (CenterPoint.center) circle(\R0);
+
+    \path (CenterPoint.center) -- ++(135:2.6*\R0) node[draw=black, anchor=north west]{water, $P(+\infty) = P_0$};
 
 \end{tikzpicture}
 
