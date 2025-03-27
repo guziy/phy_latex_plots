@@ -41,14 +41,14 @@
     \filldraw[color=black, fill=white] (CenterPoint.center) circle(\r0);
     
     \draw[axis] (CenterPoint.center) circle(2.8 * \r0);
-    \draw[axis, ->] (CenterPoint.center) -- ++(85:2.8*\r0) 
+    \draw[axis, ->] (CenterPoint.center) -- ++(95:2.8*\r0) 
                     node [color=black, anchor=south west, inner sep=0]{$r, u(r)=\dot{r}$};
 
     \node[left] at (CenterPoint.center) {$C$};
-    \draw[->, axis] (CenterPoint.center) -- (-45:\r0) node[inner sep=0](r0label){}; 
-    \node[anchor=north west, inner sep=0, text width=4em] at (r0label.center){$r_0$\\ $u(r_0)=?$};
+    \draw[->, axis] (CenterPoint.center) -- (-105:\r0) node[inner sep=0](r0label){}; 
+    \node[anchor=north west, inner sep=0, text width=4em] at ([yshift=-0.5em]r0label.center){$r_0$\\ $u(r_0)=?$};
 
-    \draw[->, axis] (CenterPoint.center) -- (-75:\R0) node[inner sep=0](R0label){};
+    \draw[->, axis] (CenterPoint.center) -- (-15:\R0) node[inner sep=0](R0label){};
 
     \draw[->, axis] (CenterPoint.center) -- (\parcelangle:2.*\R0) 
                                             node [solid, draw=black, rotate=\parcelangle, minimum size=1.8em] (parcelCenter) {};
