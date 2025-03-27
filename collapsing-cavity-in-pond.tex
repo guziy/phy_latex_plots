@@ -32,7 +32,7 @@
     m/.style={rectangle,draw=black,fill=lightgray,minimum size=0.3cm,thin},
     plane/.style={draw=black,fill=blue!10},
     string/.style={draw=red, thick},
-    pulley/.style={thick}
+    pulley/.style={thick}, scale=0.85
 ]
 
     \node[inner sep=0] at (0,0) (CenterPoint) {};
@@ -41,7 +41,8 @@
     \filldraw[color=black, fill=white] (CenterPoint.center) circle(\r0);
     
     \draw[axis] (CenterPoint.center) circle(2.8 * \r0);
-    \draw[axis, ->] (CenterPoint.center) -- ++(75:2.8*\r0) node [color=black, anchor=south west, inner sep=0]{$r, u(r)=\dot{r}$};
+    \draw[axis, ->] (CenterPoint.center) -- ++(85:2.8*\r0) 
+                    node [color=black, anchor=south west, inner sep=0]{$r, u(r)=\dot{r}$};
 
     \node[left] at (CenterPoint.center) {$C$};
     \draw[->, axis] (CenterPoint.center) -- (-45:\r0) node[inner sep=0](r0label){}; 
