@@ -3,6 +3,7 @@
 \usetikzlibrary{scopes}
 \usepackage{verbatim}
 \usetikzlibrary{calc,angles,patterns,quotes,positioning}
+\usetikzlibrary{patterns.meta}
 \usepackage{pgfplots}
 \usepackage{pgf}
 \usepackage[dvipsnames]{xcolor}
@@ -27,24 +28,34 @@
 \def\totalWaterLengthX{45em}
 \def\totalWaterHeightZ{21em}
 \def\wallWidth{1em}
+\def\parcelHalfHeight{0.2*\totalWaterHeightZ}
 
 
 \begin{tikzpicture}[
-    force/.style={>=latex,draw=blue,fill=blue,line width=0.5*\lwdth},
-    axis/.style={>=latex,dashed,gray, line width=0.15em, dash pattern=on 8pt off 3pt},
+    force/.style={>=latex,draw=blue,fill=blue,line width=\lwdth},
+    axis/.style={>=latex,dashed,gray, line width=0.15em, 
+                 dash pattern=on 8pt off 3pt},
     M/.style={rectangle,draw,fill=lightgray,minimum size=0.5cm,thin},
     m/.style={rectangle,draw=black,fill=lightgray,minimum size=0.3cm,thin},
     plane/.style={draw=black,fill=blue!10},
     string/.style={draw=red, thick},
     pulley/.style={thick},
-    point/.style={inner sep=0, minimum width=0},
-    timber-fill/.style={pattern=north east lines, pattern color=black},
-    timber-fill-top/.style={pattern=north west lines, pattern color=black},
+    point/.style={inner sep=0, minimum width=0, text=black},
+    timber-fill/.style={pattern={
+        Lines[distance=8.5pt, angle=45]},
+        pattern tile/.style={clip=false},
+        pattern color=black
+    },
+    timber-fill-top/.style={
+        pattern={Lines[distance=8.5pt, angle=135]}, 
+        pattern tile/.style={clip=false},
+        pattern color=black
+    },
     scale=1.2
 ]
 
 
-    \tikzstyle{every node}=[font=\Large]
+    \tikzstyle{every node}=[font=\Large];
 
     \node[point] at (0,0) (lowerPlateLeftEdge) {};
 
@@ -61,20 +72,61 @@
                                         
                                         
     \draw[axis, ->] (lowerPlateLeftEdge.center) -- 
-                  ++(1.2*\totalWaterLengthX, 0) node[below] (xAxisLabel){$x$};
+                  ++(1.2*\totalWaterLengthX, 0) node[below=1ex, point] (xAxisLabel){$x$};
     
     \draw[axis, ->] (lowerPlateLeftEdge.center) -- 
-                  ++(0, 1.4*\totalWaterHeightZ) node[left] (yAxisLabel){$z$};
+                  ++(0, 1.4*\totalWaterHeightZ) node[left=1ex, point] (yAxisLabel){$z$};
 
 
-    \node[below left] at (lowerPlateLeftEdge) {$O$};
+    \node[below left=1ex, point] at (lowerPlateLeftEdge) {$O$};
 
 
-    \pattern[timber-fill, draw=none] (lowerPlateLeftEdge.center) -- (lowerPlateRightEdge.center) 
+    \pattern[timber-fill, draw=none] (lowerPlateLeftEdge.center) -- ([xshift=-0.1em]lowerPlateRightEdge.center) 
                    -- ++(0, -\wallWidth) -- ++(-\totalWaterLengthX, 0) --cycle;
 
     \pattern[timber-fill-top, draw=none] (upperPlateLeftEdge.center) -- (upperPlateRightEdge.center) 
                    -- ++(0, \wallWidth) -- ++(-\totalWaterLengthX, 0) --cycle;
+
+    \draw[axis] (middleWaterLayerLeft.center) -- (middleWaterLayerRight.center) 
+                node[pos=0.3, point] (leftMiddleParcel) {}
+                node[pos=0.7, point] (rightMiddleParcel) {}
+                node[pos=0.5, point] (centerParcel) {}; 
+
+
+    \draw[force, ->] (middleWaterLayerRight.center) -- ++(3em, 0) node[above right] {$v = v(h/2)$};
+
+    % draw the imaginary parcel
+    \path (leftMiddleParcel.center) -- ++(0, \parcelHalfHeight) node[point](parcelUpperLeft) {};
+    \path (leftMiddleParcel.center) -- ++(0, -\parcelHalfHeight) node[point](parcelLowerLeft) {};
+
+    \path (rightMiddleParcel.center) -- ++(0, \parcelHalfHeight) node[point](parcelUpperRight) {};
+    \path (rightMiddleParcel.center) -- ++(0, -\parcelHalfHeight) node[point](parcelLowerRight) {};
+
+    \draw[axis, violet, line width=0.2em] (parcelLowerLeft.center) 
+                     -- (parcelUpperLeft.center)
+                     -- (parcelUpperRight.center) node[point, midway] (upperStressStart) {}
+                     -- (parcelLowerRight.center) -- cycle node[point, midway] (lowerStressStart) {};
+
+    \draw[axis] (parcelUpperRight.center) -- ++(2.5em, 0) node [point, midway] (dzUpperLimit){};
+    \draw[axis] (parcelLowerRight.center) -- ++(2.5em, 0) node [point, midway] (dzLowerLimit){};                 
+    \draw[axis, <->] (dzLowerLimit.center) -- (dzUpperLimit.center) node[pos=0.7, right=1ex, point, anchor=west] {$\Delta z$};
+    \draw[axis, <-] (dzLowerLimit.center) node [point, below right=2ex, anchor=north west]{$z$} --
+                    ($(lowerPlateLeftEdge.center)!(dzLowerLimit.center)!(lowerPlateRightEdge.center)$);
+
+                      
+    % mark forces acting on the parcel
+    \draw[force, ->] (upperStressStart.center) -- ++(-6em, 0) node[above=1ex, anchor=south, point] {$\tau_x(h - z)=\tau_x(z)$};
+    \draw[force, ->] (lowerStressStart.center) -- ++(-6em, 0) node[below=1ex, anchor=north, point] {$\tau_x(z)$};
+
+
+    % mark distance between horizontal plates
+    \draw[axis] (lowerPlateLeftEdge.center) -- ++(-3em, 0) node[point, midway] (topHMark) {};
+    \draw[axis] (upperPlateLeftEdge.center) -- ++(-3em, 0) node[point, midway] (botHMark) {};
+    \draw[axis, <->] (topHMark.center) -- (botHMark) node [point, midway, left=2ex] {$h$}; 
+
+    
+
+
     
 \end{tikzpicture}
 
