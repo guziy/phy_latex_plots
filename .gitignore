@@ -3,3 +3,6 @@
 *.log
 *.fls
 *.gz
+*.md5
+*.png
+*.auxlock
