@@ -94,6 +94,8 @@
 
 
     \draw[force, ->] (middleWaterLayerRight.center) -- ++(3em, 0) node[above right] {$v = v(h/2)$};
+    \node[point, anchor=south west, above right=1ex] at (lowerPlateRightEdge.center) {$v(0) = 0$};
+    \node[point, anchor=north west, below right=1ex] at (upperPlateRightEdge.center) {$v(h) = 0$};
 
     % draw the imaginary parcel
     \path (leftMiddleParcel.center) -- ++(0, \parcelHalfHeight) node[point](parcelUpperLeft) {};
@@ -109,14 +111,21 @@
 
     \draw[axis] (parcelUpperRight.center) -- ++(2.5em, 0) node [point, midway] (dzUpperLimit){};
     \draw[axis] (parcelLowerRight.center) -- ++(2.5em, 0) node [point, midway] (dzLowerLimit){};                 
-    \draw[axis, <->] (dzLowerLimit.center) -- (dzUpperLimit.center) node[pos=0.7, right=1ex, point, anchor=west] {$\Delta z$};
+    \draw[axis, <->] (dzLowerLimit.center) -- (dzUpperLimit.center) node[pos=0.7, right=1ex, point, anchor=west] {$\Delta z = h - 2z$};
     \draw[axis, <-] (dzLowerLimit.center) node [point, below right=2ex, anchor=north west]{$z$} --
-                    ($(lowerPlateLeftEdge.center)!(dzLowerLimit.center)!(lowerPlateRightEdge.center)$);
+                    ($(lowerPlateLeftEdge.center)!(dzLowerLimit.center)!(lowerPlateRightEdge.center)$) node[point](zLowerLimit){};
+
+    \draw[axis] (parcelLowerLeft.center) -- ++(0, -3.5em) node[point, pos=0.8](dxLeftLimit){};
+    \draw[axis, <->] (dxLeftLimit.center) -- ($(dzLowerLimit.center)!(dxLeftLimit.center)!(zLowerLimit.center)$)
+                            node[point,midway,below=1ex, anchor=north]{$\Delta x$};
+    
 
                       
     % mark forces acting on the parcel
-    \draw[force, ->] (upperStressStart.center) -- ++(-6em, 0) node[above=1ex, anchor=south, point] {$\tau_x(h - z)=\tau_x(z)$};
-    \draw[force, ->] (lowerStressStart.center) -- ++(-6em, 0) node[below=1ex, anchor=north, point] {$\tau_x(z)$};
+    \draw[force, ->] (upperStressStart.center) -- ++(-6em, 0) node[above=1ex, anchor=south, point, pos=0] {$f_{v}=\tau_x(z+\Delta z)\Delta x \Delta y$};
+    \draw[force, ->] (lowerStressStart.center) -- ++(-6em, 0) node[below=1ex, anchor=north, point, pos=0] {$f_{v}=\tau_x(z)\Delta x \Delta y$};
+    \draw[force, ->] (centerParcel.center) -- ++(12em, 0) 
+                     node[point, pos=-0.2,above=1ex,anchor=south west]{$f_p = \left( -\frac{dP}{dx} \Delta x \right) \Delta y \Delta z$};
 
 
     % mark distance between horizontal plates
