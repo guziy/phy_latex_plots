@@ -92,8 +92,8 @@
     \path (interior.after bottom) -- (interior.before top) node[midway, inner sep=0] (topStress) {};
     \path (interior.before bottom) -- (interior.after top) node[midway, inner sep=0] (bottomStress) {};
 
-    \draw[force, ->] (topStress.center) -- ++(-1em, 0) node[above, anchor=south] {$\tau$};
-    \draw[force, ->] (bottomStress.center) -- ++(-1em, 0) node[below, anchor=north] {$\tau$};
+    \draw[force, ->] (topStress.center) -- ++(-1em, 0) node[above, anchor=south] {$\tau_x (r)$};
+    \draw[force, ->] (bottomStress.center) -- ++(-1em, 0) node[below, anchor=north] {$\tau_x (r)$};
     
 
     \node[circle,point,draw=black] at (interior.shape center) {};
