@@ -85,14 +85,25 @@
     \draw[axis, ->] (centerRight.center) -- ([yshift=-0.08em]interior.before top) node[above right=1ex, anchor=south, inner sep=0]{$r$};
     \draw[axis, ->] (centerLeft.center) -- ([yshift=-0.08em]exterior.after bottom) node[above=1ex, anchor=south, inner sep=0]{$R$};
     
-    \draw[force, ->] (interior.shape center) -- ++(2em, 0) node[midway, anchor=south west]{$f_p$};
-    \draw[force, ->] (interior.shape center) -- ++(-2em, 0) node[midway, anchor=north east]{$f_{\tau}$};
+    \draw[force, ->] (interior.shape center) -- ++(1.8em, 0) node[midway, anchor=south west]{$f_p$};
+    \draw[force, ->] (interior.shape center) -- ++(-1.8em, 0) node[midway, anchor=north east]{$f_{\tau}$};
+    
+
+    \path (interior.after bottom) -- (interior.before top) node[midway, inner sep=0] (topStress) {};
+    \path (interior.before bottom) -- (interior.after top) node[midway, inner sep=0] (bottomStress) {};
+
+    \draw[force, ->] (topStress.center) -- ++(-1em, 0) node[above, anchor=south] {$\tau$};
+    \draw[force, ->] (bottomStress.center) -- ++(-1em, 0) node[below, anchor=north] {$\tau$};
+    
+
     \node[circle,point,draw=black] at (interior.shape center) {};
 
 
     \draw (exterior.before bottom)  -- ++(0, -0.5em) node [inner sep=0, midway] (leftEdgeLengthLabel){};
     \draw (exterior.after top) -- ++(0, -0.5em)  node [inner sep=0, midway] (rightEdgeLengthLabel){};
     \draw[axis, <->] (leftEdgeLengthLabel.center) -- (rightEdgeLengthLabel.center) node[midway, anchor=north]{$l$};
+
+
 
 
     \node[circle,point,draw=black] at (centerRight.center) {};
