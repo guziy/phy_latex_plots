@@ -33,14 +33,14 @@
 
 \begin{tikzpicture}[
     force/.style={>=latex,draw=blue,fill=blue,line width=\lwdth},
-    axis/.style={>=latex,dashed,gray, line width=0.15em, 
+    axis/.style={>=latex,dashed,gray, line width=0.1em, 
                  dash pattern=on 8pt off 3pt},
     M/.style={rectangle,draw,fill=lightgray,minimum size=0.5cm,thin},
     m/.style={rectangle,draw=black,fill=lightgray,minimum size=0.3cm,thin},
     plane/.style={draw=black,fill=blue!10},
     string/.style={draw=red, thick},
     pulley/.style={thick},
-    point/.style={inner sep=0, minimum width=0, text=black},
+    point/.style={inner sep=0, minimum width=0.4em, fill=black, text=black},
     timber-fill/.style={pattern={
         Lines[distance=8.5pt, angle=45]},
         pattern tile/.style={clip=false},
@@ -50,30 +50,54 @@
         pattern={Lines[distance=8.5pt, angle=135]}, 
         pattern tile/.style={clip=false},
         pattern color=black
-    },
-    scale=1.2
+    }, scale=3
 ]
 
 
-    \tikzstyle{every node}=[font=\Large];
+    \tikzstyle{every node}=[font=\Large, text=black];
 
     
-    
-    
-    \node[cylinder, draw, shape aspect=2.5, 
+     \node[cylinder, draw, axis, violet, line width=0.1em, shape aspect=4, 
           cylinder uses custom fill, cylinder end fill=blue!50, 
-          minimum height=6em, minimum width=1em,
-          cylinder body fill=blue!25, opacity=0.8, 
-          scale=6, rotate=0]{};
-
-
-    \node[cylinder, draw, shape aspect=2.5, 
-          cylinder uses custom fill, cylinder end fill=blue!50, 
-          minimum height=6em, minimum width=3em,
+          minimum height=11em, minimum width=3.5em,
           cylinder body fill=blue!25, opacity=0.5, 
-          scale=6, rotate=0]{};
+          scale=3, rotate=0] (interior) {};
  
     
+    \node[cylinder, draw, shape aspect=6, 
+          cylinder uses custom fill, cylinder end fill=blue!50, 
+          minimum height=12em, minimum width=8em,
+          cylinder body fill=blue!25, opacity=0.4, 
+          scale=3, rotate=0, line width=0.15em] (exterior) at ([xshift=-0.5em]interior.center) {};
+
+
+
+    \path (interior.before top) -- (interior.after top) node (centerRight) [midway] {}; 
+    \path (interior.before bottom) -- (interior.after bottom) node (centerLeft) [midway] {}; 
+    \draw[axis] (centerLeft.center) -- (centerRight.center);
+    \draw[->, force] (centerRight.center) -- ++(3em, 0) node[above right=0ex, inner sep=0]{$v(r=0)$};
+    
+
+    \draw[axis, opacity=0.5, line width=0.1em] ([yshift=-0.08em]interior.after bottom) to[out=-5, in=5] ([yshift=0.08em]interior.before bottom);
+    \draw[axis, opacity=0.5, line width=0.1em] ([yshift=-0.08em]exterior.after bottom) to[out=-5, in=5] ([yshift=0.08em]exterior.before bottom);
+
+
+    \draw[axis, ->] (centerRight.center) -- ([yshift=-0.08em]interior.before top) node[above right=1ex, anchor=south, inner sep=0]{$r$};
+    \draw[axis, ->] (centerLeft.center) -- ([yshift=-0.08em]exterior.after bottom) node[above=1ex, anchor=south, inner sep=0]{$R$};
+    
+    \draw[force, ->] (interior.shape center) -- ++(2em, 0) node[midway, anchor=south west]{$f_p$};
+    \draw[force, ->] (interior.shape center) -- ++(-2em, 0) node[midway, anchor=north east]{$f_{\tau}$};
+    \node[circle,point,draw=black] at (interior.shape center) {};
+
+
+    \draw (exterior.before bottom)  -- ++(0, -0.5em) node [inner sep=0, midway] (leftEdgeLengthLabel){};
+    \draw (exterior.after top) -- ++(0, -0.5em)  node [inner sep=0, midway] (rightEdgeLengthLabel){};
+    \draw[axis, <->] (leftEdgeLengthLabel.center) -- (rightEdgeLengthLabel.center) node[midway, anchor=north]{$l$};
+
+
+    \node[circle,point,draw=black] at (centerRight.center) {};
+    \node[circle,point,draw=black] at (centerLeft.center) {};
+
 \end{tikzpicture}
 
 \end{document} 
