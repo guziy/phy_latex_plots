@@ -1,0 +1,51 @@
+\documentclass[tikz,border=10pt,dvipsnames]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{scopes}
+\usepackage{verbatim}
+\usetikzlibrary{calc,angles,patterns,quotes,positioning}
+\usepackage{pgfplots}
+\usepackage{pgf}
+% \usepackage[dvipsnames]{xcolor}
+\usetikzlibrary{backgrounds}
+\pgfplotsset{compat=newest}
+\pgfplotsset{plot coordinates/math parser=false}
+
+
+
+\begin{document}
+
+\def\down{-90}
+\def\ang{30}
+\def\hgt{10em}
+\def\lwdth{0.2em}
+\def\R0{10.7em}
+\def\r0{2.7em}
+\def\dotr{0.1em}
+\def\parcelangle{30}
+\def\r{6em}
+
+\begin{tikzpicture}[
+    force/.style={>=latex,draw=blue,fill=blue,line width=0.5*\lwdth},
+    axis/.style={>=latex, densely dashed,gray, line width=0.1em},
+    M/.style={rectangle,draw,fill=lightgray,minimum size=0.5cm,thin},
+    m/.style={rectangle,draw=black,fill=lightgray,minimum size=0.3cm,thin},
+    plane/.style={draw=black,fill=blue!10},
+    string/.style={draw=red, thick},
+    pulley/.style={thick}, scale=0.75
+]
+
+
+
+    \node[draw=none, anchor=center, fill=red, inner sep=0] at (0,0) (CenterPoint) {O};
+
+    \node[below=\r of CenterPoint.center, inner sep=0, fill=green] (BottomCenter) {B};
+
+    \draw[] (BottomCenter.center) -- ++(\r, 0) 
+                                  -- ++(0, 2*\r) 
+                                  -- ++(-2*\r, 0)
+                                  -- ++(0, -2*\r) 
+                                  -- cycle;
+
+\end{tikzpicture}
+
+\end{document}
