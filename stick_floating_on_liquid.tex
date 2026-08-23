@@ -36,15 +36,37 @@
 
 
 
-    \node[draw=none, anchor=center, fill=red, inner sep=0] at (0,0) (CenterPoint) {O};
+    \node[draw=none, anchor=center, inner sep=0] at (0,0) (CenterPoint) {};
 
-    \node[below=\r of CenterPoint.center, inner sep=0, fill=green] (BottomCenter) {B};
+    \node[inner sep=0, outer sep=0] (BottomCenter) at ([yshift=-\r]CenterPoint.center) {};
 
-    \draw[] (BottomCenter.center) -- ++(\r, 0) 
-                                  -- ++(0, 2*\r) 
+
+    \fill[gray!45] (BottomCenter.center) -- ++(\r, 0) 
+                                  -- ++(0, 2*\r)
                                   -- ++(-2*\r, 0)
-                                  -- ++(0, -2*\r) 
+                                  -- ++(0, -2*\r)
                                   -- cycle;
+
+    \draw[very thick] (BottomCenter.center) -- ++(\r, 0) 
+                                  -- ++(0, 2*\r) node[pos=0.5] (rightMiddle) {C} 
+                                  -- ++(-2*\r, 0) node[pos=0] (rightTop) {D}
+                                                  node[pos=1] (leftTop) {D}
+                                  -- ++(0, -2*\r) node[pos=0.5] (leftMiddle) {C} 
+                                  -- cycle;
+
+    \node[] at ([xshift=\r]rightTop) (waterPointRight2) {E};
+    \node[] at ([xshift=2*\r]rightTop) (waterPointRight3) {F};
+
+    \draw[blue, thick] (rightMiddle.center) to [out=90,in=180, looseness=1] (waterPointRight2.center);
+    \draw[blue, thick] (waterPointRight2.center) -- (waterPointRight3.center);
+    
+
+    \node[] at ([xshift=-\r]leftTop) (waterPointLeft2) {E};
+    \node[] at ([xshift=-2*\r]leftTop) (waterPointLeft3) {F};
+
+    \draw[blue, thick] (leftMiddle.center) to [out=90,in=0, looseness=1] (waterPointLeft2.center);
+    \draw[blue, thick] (waterPointLeft2.center) -- (waterPointLeft3.center);
+
 
 \end{tikzpicture}
 
