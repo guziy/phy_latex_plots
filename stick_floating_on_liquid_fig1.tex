@@ -1,0 +1,95 @@
+\documentclass[tikz,border=10pt,dvipsnames]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{scopes}
+\usepackage{verbatim}
+\usetikzlibrary{calc,angles,patterns,quotes,positioning}
+\usepackage{pgfplots}
+\usepackage{pgf}
+% \usepackage[dvipsnames]{xcolor}
+\usetikzlibrary{backgrounds}
+\pgfplotsset{compat=newest}
+\pgfplotsset{plot coordinates/math parser=false}
+
+
+
+\begin{document}
+
+\def\down{-90}
+\def\ang{30}
+\def\hgt{10em}
+\def\lwdth{0.2em}
+\def\R0{10.7em}
+\def\r0{2.7em}
+\def\dotr{0.1em}
+\def\parcelangle{30}
+\def\r{6em}
+
+\begin{tikzpicture}[
+    force/.style={>=latex,draw=blue,fill=blue,line width=0.5*\lwdth},
+    axis/.style={>=latex, densely dashed,gray, line width=0.1em},
+    M/.style={rectangle,draw,fill=lightgray,minimum size=0.5cm,thin},
+    m/.style={rectangle,draw=black,fill=lightgray,minimum size=0.3cm,thin},
+    plane/.style={draw=black,fill=blue!10},
+    string/.style={draw=red, thick},
+    pulley/.style={thick}, scale=0.6
+]
+
+
+
+    \node[draw=none, anchor=center, inner sep=0] at (0,0) (CenterPoint) {};
+
+    \node[inner sep=0, outer sep=0] (BottomCenter) at ([yshift=-\r]CenterPoint.center) {};
+
+
+    \fill[gray!45] (BottomCenter.center) -- ++(\r, 0) node[pos=1] (rightBottom) {}
+                                  -- ++(0, 2*\r)  node[pos=0.5] (rightMiddle) {} 
+                                  -- ++(-2*\r, 0) node[pos=0] (rightTop) {}
+                                                  node[pos=1] (leftTop) {}
+                                  -- ++(0, -2*\r) node[pos=0.5] (leftMiddle) {}
+                                                  node[pos=1] (leftBottom) {}  
+                                  -- cycle;
+
+    
+
+    \node[] at ([xshift=\r]rightTop) (waterPointRight2) {};
+    \node[] at ([xshift=2*\r]rightTop) (waterPointRight3) {};
+
+    \node[] at ([xshift=-\r]leftTop) (waterPointLeft2) {};
+    \node[] at ([xshift=-2*\r]leftTop) (waterPointLeft3) {};
+
+
+    \fill[blue!10] (rightMiddle.center) to [out=90,in=180, looseness=1] (waterPointRight2.center)
+                    -- (waterPointRight3.center) -- ([yshift=-2.5*\r]waterPointRight3.center) node[](waterBottomRight){}
+                    -- ([xshift=-6*\r]waterBottomRight.center) node[](waterBottomLeft){}
+                    -- (waterBottomLeft.center) 
+                    -- (waterPointLeft3.center)
+                    -- (waterPointLeft2.center) to [out=0,in=90, looseness=1] (leftMiddle.center)
+                    -- (leftBottom.center) 
+                    -- (rightBottom.center)
+                    -- cycle;
+
+
+    \draw[very thick] (BottomCenter.center) -- ++(\r, 0) 
+                                  -- ++(0, 2*\r) 
+                                  -- ++(-2*\r, 0) 
+                                  -- ++(0, -2*\r)  
+                                  -- cycle;
+
+
+
+    \draw[blue, thick] (rightMiddle.center) to [out=90,in=180, looseness=1] (waterPointRight2.center);
+    \draw[blue, thick] (waterPointRight2.center) -- (waterPointRight3.center);
+    
+
+
+    \draw[blue, thick] (leftMiddle.center) to [out=90,in=0, looseness=1] (waterPointLeft2.center);
+    \draw[blue, thick] (waterPointLeft2.center) -- (waterPointLeft3.center);
+
+
+    \node[anchor=north west] at (waterPointLeft3) {$\rho_0$};
+    \node[anchor=north west] at (leftTop) {$\rho$};
+
+
+\end{tikzpicture}
+
+\end{document}
