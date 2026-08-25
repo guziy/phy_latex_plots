@@ -21,7 +21,7 @@
 \def\r0{2.7em}
 \def\dotr{0.1em}
 \def\parcelangle{30}
-\def\r{10em}
+\def\r{15em}
 
 \begin{tikzpicture}[
     force/.style={>=latex,draw=blue,line width=0.3*\lwdth},
@@ -36,10 +36,10 @@
 
    
     \node[] (A){};
-    \draw[force, ->] (A.center) -- ++(0,-0.5*\r) node[pos=1, left, anchor=east] {$F_{\tau} = \sigma l$};
+    \draw[force, ->] (A.center) -- ++(0,-0.7*\r) node[pos=1, left, anchor=east] {$F_{\tau} = \sigma l$};
 
     \node[] (B) at ([xshift=\r,yshift=\r]A.center) {};
-    \draw[force, ->] (B.center) -- ++(0.5*\r, 0) node[pos=1, above, anchor=south] {$F_{\tau} = \sigma l$};
+    \draw[force, ->] (B.center) -- ++(0.7*\r, 0) node[pos=1, above, anchor=south] {$F_{\tau} = \sigma l$};
 
     \node[] (C) at ([xshift=\r]A.center) {};
 
@@ -51,20 +51,26 @@
     
     \draw[axis] (A.center) -- (C.center) 
                 node[midway, below, color=black] {$r$} 
-                node[pos=0.8, point] (alphaStart) {}
                 -- (B.center) 
                 node[midway, right, color=black] {$r$};
 
-    \draw[axis] (C.center) -- ($(C.center)!1.3!(D.center)$) node[pos=1](FpEnd){}
-        node[pos=0.154, point] (alphaEnd) {}; % 0.2/1.3=0.154...
+    \path (C.center) -- (D.center) node[pos=0.3] (alphaEnd) {};
+    \path (C.center) -- (A.center) node[pos=0.3] (alphaStart) {};
+    \draw[->, axis, line width=0.01em] (alphaStart.center) to[out=45, in=135, relative] 
+                                       node[pos=0.3, left=-0.3em, anchor=south east, color=black] {$\alpha$}
+                                       (alphaEnd.center);
 
-    \draw[axis, line width=0.01em] (C.center) -- (Dleft.center) node[pos=0.6, inner sep=0pt, point] (dalphaStart) {};
-    \draw[axis, line width=0.01em] (C.center) -- (Dright.center) node[pos=0.6, inner sep=0pt, point] (dalphaEnd) {};
+    \draw[axis] (C.center) -- ($(C.center)!1.3!(D.center)$) node[pos=1](FpEnd){};
+
+
+    \draw[axis, line width=0.01em] (C.center) -- (Dleft.center) node[pos=0.7] (dalphaStart) {};
+    \draw[axis, line width=0.01em] (C.center) -- (Dright.center) node[pos=0.7] (dalphaEnd) {};
     
 
+    \draw[->, axis, line width=0.01em] (dalphaStart.center) to[out=45, in=135, relative] (dalphaEnd.center) ;
     
-    \node[] at (dalphaEnd.center) [above=0, anchor=south west] {$d\alpha$};
-    \node[] at (alphaStart.center) [left, anchor=south east] {$\alpha$};
+    \node[] at (dalphaEnd.center) [above=0, anchor=south] {$d\alpha$};
+    
 
     
     \draw[force, ->] (D.center) -- (FpEnd.center) node[pos=1, left, anchor=east] {$dF_{p}(\alpha)$};
@@ -72,6 +78,10 @@
     \node[point, label=left:$A$] at (A.center) (pointA) {};
     \node[point, label=above:$B$] at (B.center) (pointB) {};
     \node[point, label=below:$C$] at (C.center) (pointC) {};
+
+    % \node[point] at (alphaStart.center) (pointAlphaStart) {};
+    % \node[point] at (alphaEnd.center) (pointAlphaEnd) {};
+
     \node[point] at (D.center) (pointD) {};
 
 \end{tikzpicture}
